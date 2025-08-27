@@ -3,7 +3,7 @@
 import { useRouter } from "next/navigation";
 import CustomInput from "@/customComp/CustomInput";
 import CustomButton from "@/customComp/CustomButton";
-import { useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 
 export default function RegisterPage() {
   const router = useRouter();
@@ -11,6 +11,24 @@ export default function RegisterPage() {
   const [username, setUsername] = useState("");
   const [emailOrPhone, setEmailOrPhone] = useState("");
   const [password, setPassword] = useState("");
+
+  // Simple carousel state
+  const images = useMemo(
+    () => [
+      "https://images.unsplash.com/photo-1464965911861-746a04b4bca6?auto=format&fit=crop&w=1400&q=80",
+      "https://images.unsplash.com/photo-1506806732259-39c2d0268443?auto=format&fit=crop&w=1400&q=80",
+      "https://images.unsplash.com/photo-1512621776951-a57141f2eefd?auto=format&fit=crop&w=1400&q=80",
+    ],
+    []
+  );
+  const [activeIndex, setActiveIndex] = useState(0);
+
+  useEffect(() => {
+    const id = setInterval(() => {
+      setActiveIndex((prev) => (prev + 1) % images.length);
+    }, 3500);
+    return () => clearInterval(id);
+  }, [images.length]);
 
   return (
     <div className="min-h-screen w-full px-6 py-10 md:px-10 lg:px-16 flex items-center justify-center">
@@ -69,13 +87,30 @@ export default function RegisterPage() {
           </div>
         </div>
 
-        {/* Right: Image */}
-        <div className="rounded-3xl overflow-hidden shadow-xl bg-white h-[520px]">
-          <img
-            alt="Fresh tomatoes in a bowl"
-            src="https://images.unsplash.com/photo-1464965911861-746a04b4bca6?auto=format&fit=crop&w=1400&q=80"
-            className="w-full h-full object-cover"
-          />
+        {/* Right: Carousel */}
+        <div className="rounded-3xl overflow-hidden shadow-xl bg-white h-[520px] relative">
+          {images.map((src, idx) => (
+            <img
+              key={src}
+              alt="carousel image"
+              src={src}
+              className={`absolute inset-0 h-full w-full object-cover transition-opacity duration-700 ${idx === activeIndex ? "opacity-100" : "opacity-0"}`}
+            />
+          ))}
+
+          {/* Footer indicators */}
+          <div className="absolute bottom-4 left-0 right-0 flex justify-center gap-2">
+            {images.map((_, idx) => (
+              <button
+                key={idx}
+                aria-label={`Go to slide ${idx + 1}`}
+                onClick={() => setActiveIndex(idx)}
+                className={`h-2.5 w-2.5 rounded-full transition-all ${
+                  idx === activeIndex ? "bg-white w-8" : "bg-white/60"
+                }`}
+              />
+            ))}
+          </div>
         </div>
       </div>
     </div>
