@@ -4,7 +4,7 @@ import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { isLoggedIn } from "@/lib/auth";
 
-export default function AuthLayout({
+export default function MainLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
@@ -12,12 +12,12 @@ export default function AuthLayout({
   const router = useRouter();
 
   useEffect(() => {
-    if (isLoggedIn()) {
-      router.replace("/dashboard");
+    if (!isLoggedIn()) {
+      router.replace("/login");
     }
   }, [router]);
 
-  if (isLoggedIn()) {
+  if (!isLoggedIn()) {
     return null;
   }
 
