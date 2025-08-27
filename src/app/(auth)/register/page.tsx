@@ -37,8 +37,11 @@ export default function RegisterPage() {
     return () => clearInterval(id);
   }, [images.length]);
 
-  const onSubmit = (data: FormValues) => {
+  const onSubmit = async (data: FormValues) => {
+    // Simulate API call
+    await new Promise((resolve) => setTimeout(resolve, 800));
     console.log("register submit", data);
+    router.push("/dashboard");
   };
 
   return (
@@ -48,7 +51,7 @@ export default function RegisterPage() {
           <h1 className="text-4xl md:text-5xl font-semibold text-green-700 tracking-tight">Get Started Now</h1>
           <p className="mt-3 text-sm text-gray-600">Enter your Credentials to Create your account</p>
 
-          <form className="mt-8" onSubmit={handleSubmit(onSubmit)}>
+          <form className="mt-8">
             <Controller
               control={control}
               name="username"
@@ -94,7 +97,12 @@ export default function RegisterPage() {
             />
 
             <div className="mt-4">
-              <CustomButton title={isSubmitting ? "Creating..." : "Create Account"} style={{ backgroundColor: "#2E7D32", color: "#fff", width: "100%", height: 48 }} disabled={isSubmitting} />
+              <CustomButton
+                title={isSubmitting ? "Creating..." : "Create Account"}
+                style={{ backgroundColor: "#2E7D32", color: "#fff", width: "100%", height: 48 }}
+                disabled={isSubmitting}
+                onPress={handleSubmit(onSubmit)}
+              />
             </div>
           </form>
 
