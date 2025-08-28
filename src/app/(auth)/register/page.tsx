@@ -6,6 +6,7 @@ import CustomButton from "@/customComp/CustomButton";
 import { useEffect, useMemo, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import Logo from "@/customComp/Logo";
+import { useRegister } from "@/lib/hooks/useRegister";
 
 export default function RegisterPage() {
   const router = useRouter();
@@ -38,11 +39,24 @@ export default function RegisterPage() {
     return () => clearInterval(id);
   }, [images.length]);
 
+  const { mutateAsync, isPending, error } = useRegister();
+
   const onSubmit = async (data: FormValues) => {
-    // Simulate API call
-    await new Promise((resolve) => setTimeout(resolve, 800));
-    console.log("register submit", data);
-    router.push(`/verify?email=${encodeURIComponent(data.emailOrPhone)}`);
+    try {
+      const res = await mutateAsync({
+        username: data.username,
+        emailOrPhone: data.emailOrPhone,
+        password: data.password,
+      });
+      const email = res.email || data.emailOrPhone;
+      if (res.next === "done") {
+        router.push("/dashboard");
+      } else {
+        router.push(`/verify?email=${encodeURIComponent(email)}`);
+      }
+    } catch (e) {
+      console.error(e);
+    }
   };
 
   return (
@@ -100,12 +114,15 @@ export default function RegisterPage() {
 
             <div className="mt-4">
               <CustomButton
-                title={isSubmitting ? "Creating..." : "Create Account"}
+                title={isPending || isSubmitting ? "Creating..." : "Create Account"}
                 style={{ backgroundColor: "#2E7D32", color: "#fff", width: "100%", height: 48 }}
-                disabled={isSubmitting}
+                disabled={isSubmitting || isPending}
                 onPress={handleSubmit(onSubmit)}
               />
             </div>
+            {error && (
+              <p className="mt-3 text-sm text-red-600">{(error as Error).message || "Registration failed"}</p>
+            )}
           </form>
 
           <div className="mt-8 text-center text-sm text-gray-600">
