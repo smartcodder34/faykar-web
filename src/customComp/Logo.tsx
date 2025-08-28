@@ -1,5 +1,7 @@
 "use client";
 import React from "react";
+import logo from "@/assets/images/logo.png";
+import Image from "next/image";
 
 type LogoProps = {
   height?: number;
@@ -11,13 +13,14 @@ type LogoProps = {
  */
 export default function Logo({ height = 28 }: LogoProps) {
   return (
-    <div className="flex items-center gap-2">
-      <img
-        src="/favkar-logo.png"
-        alt="FAVKAR"
-        style={{ height, width: "auto" }}
+    <div className=" w-[199] h-10">
+      <Image
+        src={logo}
+        alt="image"
+        width={100}
+        height={100}
+        className="object-cover h-full w-full "
       />
     </div>
   );
 }
-

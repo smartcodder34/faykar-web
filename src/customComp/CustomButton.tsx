@@ -32,7 +32,7 @@ const CustomButton = ({
 }: ButtonType) => {
   const getClasses = () => {
     if (disabled) return "bg-gray-300 text-black cursor-not-allowed";
-    if (primary) return "bg-blue-600 text-white hover:bg-blue-700";
+    if (primary) return "bg-[#2E6939] text-white hover:bg-[#2E7D32]";
     if (rounded) return "bg-blue-600 text-white rounded-full hover:bg-blue-700";
     if (danger) return "bg-red-600 text-white hover:bg-red-700";
     if (whiteBg)
@@ -43,7 +43,7 @@ const CustomButton = ({
 
   return (
     <button
-      className={`flex items-center justify-center gap-2 rounded-2xl px-4 py-2 text-sm font-medium transition-all ${getClasses()}`}
+      className={`flex items-center h-[48px] justify-center gap-2 rounded-2xl w-full px-4 py-2 text-sm font-medium transition-all ${getClasses()}`}
       style={style}
       onClick={onPress}
       disabled={disabled || loading}

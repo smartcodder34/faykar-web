@@ -7,9 +7,7 @@ export const http = axios.create({
   baseURL: apiBaseUrl,
   headers: {
     "Content-Type": "application/json",
-    Accept: "application/json",
   },
-  withCredentials: true,
 });
 
 // Read token from storage if present

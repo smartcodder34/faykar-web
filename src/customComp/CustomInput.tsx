@@ -63,7 +63,7 @@ const CustomInput = ({
   };
 
   const getBgColor = () => {
-    if (primary) return "border border-gray-400 bg-gray-50";
+    if (primary) return "border border-gray-400 ";
     if (whiteBg) return "bg-white border border-gray-200";
     return "bg-gray-100 border border-gray-200";
   };
