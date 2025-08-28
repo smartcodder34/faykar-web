@@ -5,6 +5,8 @@ import CustomInput from "@/customComp/CustomInput";
 import CustomButton from "@/customComp/CustomButton";
 import { useEffect, useMemo, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
+import Logo from "@/customComp/Logo";
+import { useRegister } from "@/lib/hooks/useRegister";
 
 export default function RegisterPage() {
   const router = useRouter();
@@ -40,22 +42,26 @@ export default function RegisterPage() {
     return () => clearInterval(id);
   }, [images.length]);
 
+  const { mutateAsync, isPending, error } = useRegister();
+
   const onSubmit = async (data: FormValues) => {
+
     // Simulate API call
     console.log("register submit", data);
     router.push("/dashboard");
+
   };
 
   return (
     <div className="min-h-screen w-full px-6 py-10 md:px-10 lg:px-16 flex items-center justify-center">
       <div className="w-full max-w-6xl grid grid-cols-1 md:grid-cols-2 gap-10 items-center">
         <div className="max-w-md">
-          <h1 className="text-4xl md:text-5xl font-medium text-[#2E6939] tracking-tight">
-            Get Started Now
-          </h1>
-          <p className="mt-3 text-sm text-gray-600">
-            Enter your Credentials to Create your account
-          </p>
+
+
+          <div className="mb-6"><Logo height={30} /></div>
+          <h1 className="text-4xl md:text-5xl font-semibold text-green-700 tracking-tight">Get Started Now</h1>
+          <p className="mt-3 text-sm text-gray-600">Enter your Credentials to Create your account</p>
+
 
           <form className="mt-8">
             <Controller
@@ -129,6 +135,7 @@ export default function RegisterPage() {
 
             <div className="mt-4">
               <CustomButton
+
                 title={isSubmitting ? "Creating..." : "Create Account"}
                 style={{
                   backgroundColor: "#2E7D32",
@@ -137,12 +144,17 @@ export default function RegisterPage() {
                   height: 48,
                 }}
                 disabled={isSubmitting}
+
                 onPress={handleSubmit(onSubmit)}
               />
             </div>
+            {error && (
+              <p className="mt-3 text-sm text-red-600">{(error as Error).message || "Registration failed"}</p>
+            )}
           </form>
 
           <div className="mt-8 text-center text-sm text-gray-600">
+
             Have a account?
             <button
               className="text-green-700 hover:underline ml-1"
@@ -150,6 +162,7 @@ export default function RegisterPage() {
             >
               Sign In
             </button>
+
           </div>
         </div>
 
