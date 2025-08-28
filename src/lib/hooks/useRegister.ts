@@ -2,6 +2,7 @@ import { useMutation } from "@tanstack/react-query";
 import { registerUser, RegisterPayload } from "@/lib/api/auth";
 import { useRouter } from "next/navigation";
 import { ApiError, toApiError } from "../http";
+import { showErrorToast, showSuccessToast } from "@/lib/toast";
 
 // export function useRegister() {
 //   return useMutation<RegisterResponse, Error, RegisterPayload>({
@@ -16,18 +17,15 @@ export const useRegisterUser = () => {
   return useMutation({
     mutationFn: registerUser,
     onSuccess(data: RegisterPayload) {
-      // showSuccessToast({
-      //   message: data.message,
-      // });
-
+      showSuccessToast("Registration successful");
       console.log("register success data:", data);
 
       // router.push("/(auth)/create-account/verification");
     },
     onError(error) {
-      // handleAxiosError(error);
-          throw toApiError(error) as ApiError;
-      
+      const apiError = toApiError(error) as ApiError;
+      showErrorToast(apiError.message || "Registration failed");
+      throw apiError;
     },
   });
 };

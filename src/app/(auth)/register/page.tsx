@@ -8,6 +8,7 @@ import { Controller, useForm } from "react-hook-form";
 import Logo from "@/customComp/Logo";
 import { AuthSlider } from "@/customComp/AuthSlider";
 import { useRegisterUser } from "@/lib/hooks/useRegister";
+import LoadingOverlay from "@/customComp/LoadingOverlay";
 
 export default function RegisterPage() {
   const router = useRouter();
@@ -58,7 +59,8 @@ export default function RegisterPage() {
   console.log("registerUserData", registerUserData);
 
   return (
-    <div className="min-h-screen w-full px-6 py-10 md:px-10 lg:px-16 flex items-center justify-center">
+    <div className="min-h-screen w-full px-6 py-10 md:px-10 lg:px-16 flex items-center justify-center relative">
+      <LoadingOverlay isOpen={registerUserData.isPending} message="Creating your account" />
       <div className="w-full max-w-6xl grid grid-cols-1 md:grid-cols-2 gap-10 items-center">
         <div className="max-w-md">
           <div className="mb-6">
