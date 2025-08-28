@@ -42,7 +42,7 @@ export default function RegisterPage() {
     // Simulate API call
     await new Promise((resolve) => setTimeout(resolve, 800));
     console.log("register submit", data);
-    router.push("/dashboard");
+    router.push(`/verify?email=${encodeURIComponent(data.emailOrPhone)}`);
   };
 
   return (
