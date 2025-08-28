@@ -24,7 +24,9 @@ export const registerUser = async (payload: RegisterPayload)=> {
   }
 }
 
-export const verifyEmail = async (data) => {
+export const verifyEmail = async (
+  data: Record<string, unknown> | { token: string }
+) => {
   try {
     const res = await http.post(`/auth/verify-email`, data);
     return res.data;
@@ -34,7 +36,9 @@ export const verifyEmail = async (data) => {
   }
 };
 
-export const loginUser = async (data) => {
+export const loginUser = async (
+  data: Record<string, unknown> | { email?: string; phone_number?: string; password: string }
+) => {
   try {
     const res = await http.post(`/auth/authenticate`, data);
     return res.data;
