@@ -31,18 +31,24 @@ export default function LoginPage() {
   const isSubmitting = formState.isSubmitting;
 
   const onSubmit = async (data: FormValues) => {
-    await new Promise((r) => setTimeout(r, 700));
+   
     console.log("login submit", data);
-    router.push("/dashboard");
+    // router.push("/dashboard");
   };
 
   return (
     <div className="min-h-screen w-full px-6 py-10 md:px-10 lg:px-16 flex items-center justify-center">
       <div className="w-full max-w-6xl grid grid-cols-1 md:grid-cols-2 gap-10 items-center">
         <div className="max-w-md">
-          <div className="mb-6"><Logo height={30} /></div>
-          <h1 className="text-4xl md:text-5xl font-semibold text-green-700 tracking-tight">Login Now</h1>
-          <p className="mt-3 text-sm text-gray-600">Enter your Credentials to Log into your account</p>
+          <div className="mb-6">
+            <Logo height={30} />
+          </div>
+          <h1 className="text-4xl md:text-5xl font-medium text-[#2E6939] tracking-tight">
+            Login Now
+          </h1>
+          <p className="mt-3 text-sm text-gray-600">
+            Enter your Credentials to Log into your account
+          </p>
 
           <form className="mt-8">
             <Controller
@@ -60,14 +66,23 @@ export default function LoginPage() {
                     phoneOk = true;
                     for (let i = 0; i < s.length; i++) {
                       const ch = s.charAt(i);
-                      if (ch < "0" || ch > "9") { phoneOk = false; break; }
+                      if (ch < "0" || ch > "9") {
+                        phoneOk = false;
+                        break;
+                      }
                     }
                   }
                   return emailOk || phoneOk || "Enter a valid email or phone";
                 },
               }}
               render={({ field }) => (
-                <CustomInput whiteBg placeholder="Email or Phone Number" value={field.value} onChangeText={(t) => field.onChange(t || "")} error={errors.emailOrPhone?.message} />
+                <CustomInput
+                  whiteBg
+                  placeholder="Email or Phone Number"
+                  value={field.value}
+                  onChangeText={(t) => field.onChange(t || "")}
+                  error={errors.emailOrPhone?.message}
+                />
               )}
             />
 
@@ -76,19 +91,40 @@ export default function LoginPage() {
                 <Controller
                   control={control}
                   name="password"
-                  rules={{ required: "Password is required", minLength: { value: 6, message: "Min length is 6" } }}
+                  rules={{
+                    required: "Password is required",
+                    minLength: { value: 6, message: "Min length is 6" },
+                  }}
                   render={({ field }) => (
-                    <CustomInput whiteBg secureTextEntry placeholder="Password" value={field.value} onChangeText={(t) => field.onChange(t || "")} error={errors.password?.message} />
+                    <CustomInput
+                      whiteBg
+                      secureTextEntry
+                      placeholder="Password"
+                      value={field.value}
+                      onChangeText={(t) => field.onChange(t || "")}
+                      error={errors.password?.message}
+                    />
                   )}
                 />
               </div>
-              <button type="button" className="text-xs text-green-700 hover:underline ml-3 whitespace-nowrap" onClick={() => router.push("/forgot")}>Forgot Password ?</button>
+              <button
+                type="button"
+                className="text-xs text-green-700 hover:underline ml-3 whitespace-nowrap"
+                onClick={() => router.push("/forgot")}
+              >
+                Forgot Password ?
+              </button>
             </div>
 
             <div className="mt-4">
               <CustomButton
                 title={isSubmitting ? "Signing in..." : "Login"}
-                style={{ backgroundColor: "#2E7D32", color: "#fff", width: "100%", height: 48 }}
+                style={{
+                  backgroundColor: "#2E7D32",
+                  color: "#fff",
+                  width: "100%",
+                  height: 48,
+                }}
                 disabled={isSubmitting}
                 onPress={handleSubmit(onSubmit)}
               />
@@ -97,13 +133,22 @@ export default function LoginPage() {
 
           <div className="mt-8 text-center text-sm text-gray-600">
             Don&apos;t have an account?
-            <button className="text-green-700 hover:underline ml-1" onClick={() => router.push("/register")}>Create Account</button>
+            <button
+              className="text-green-700 hover:underline ml-1"
+              onClick={() => router.push("/register")}
+            >
+              Create Account
+            </button>
           </div>
         </div>
 
         <div className="rounded-3xl overflow-hidden shadow-xl bg-white h-[520px] relative flex items-center justify-center">
           {/* Replace with /login-hero.jpg from Image 1 */}
-          <img alt="login hero" src="/login-hero.jpg" className="h-full w-full object-cover" />
+          <img
+            alt="login hero"
+            src="/login-hero.jpg"
+            className="h-full w-full object-cover"
+          />
         </div>
       </div>
     </div>
