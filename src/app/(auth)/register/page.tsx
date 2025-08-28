@@ -24,11 +24,14 @@ export default function RegisterPage() {
   const isSubmitting = formState.isSubmitting;
 
   // Basic carousel state
-  const images = useMemo(() => [
-    "https://images.unsplash.com/photo-1464965911861-746a04b4bca6?auto=format&fit=crop&w=1400&q=80",
-    "https://images.unsplash.com/photo-1506806732259-39c2d0268443?auto=format&fit=crop&w=1400&q=80",
-    "https://images.unsplash.com/photo-1512621776951-a57141f2eefd?auto=format&fit=crop&w=1400&q=80"
-  ], []);
+  const images = useMemo(
+    () => [
+      "https://images.unsplash.com/photo-1464965911861-746a04b4bca6?auto=format&fit=crop&w=1400&q=80",
+      "https://images.unsplash.com/photo-1506806732259-39c2d0268443?auto=format&fit=crop&w=1400&q=80",
+      "https://images.unsplash.com/photo-1512621776951-a57141f2eefd?auto=format&fit=crop&w=1400&q=80",
+    ],
+    []
+  );
   const [activeIndex, setActiveIndex] = useState(0);
   useEffect(() => {
     const id = setInterval(() => {
@@ -39,7 +42,6 @@ export default function RegisterPage() {
 
   const onSubmit = async (data: FormValues) => {
     // Simulate API call
-    await new Promise((resolve) => setTimeout(resolve, 800));
     console.log("register submit", data);
     router.push("/dashboard");
   };
@@ -48,8 +50,12 @@ export default function RegisterPage() {
     <div className="min-h-screen w-full px-6 py-10 md:px-10 lg:px-16 flex items-center justify-center">
       <div className="w-full max-w-6xl grid grid-cols-1 md:grid-cols-2 gap-10 items-center">
         <div className="max-w-md">
-          <h1 className="text-4xl md:text-5xl font-semibold text-green-700 tracking-tight">Get Started Now</h1>
-          <p className="mt-3 text-sm text-gray-600">Enter your Credentials to Create your account</p>
+          <h1 className="text-4xl md:text-5xl font-medium text-[#2E6939] tracking-tight">
+            Get Started Now
+          </h1>
+          <p className="mt-3 text-sm text-gray-600">
+            Enter your Credentials to Create your account
+          </p>
 
           <form className="mt-8">
             <Controller
@@ -57,7 +63,13 @@ export default function RegisterPage() {
               name="username"
               rules={{ required: "Username is required" }}
               render={({ field }) => (
-                <CustomInput whiteBg placeholder="Name" value={field.value} onChangeText={(t) => field.onChange(t || "")} error={errors.username?.message} />
+                <CustomInput
+                  whiteBg
+                  placeholder="Name"
+                  value={field.value}
+                  onChangeText={(t) => field.onChange(t || "")}
+                  error={errors.username?.message}
+                />
               )}
             />
 
@@ -76,30 +88,54 @@ export default function RegisterPage() {
                     phoneOk = true;
                     for (let i = 0; i < s.length; i++) {
                       const ch = s.charAt(i);
-                      if (ch < "0" || ch > "9") { phoneOk = false; break; }
+                      if (ch < "0" || ch > "9") {
+                        phoneOk = false;
+                        break;
+                      }
                     }
                   }
                   return emailOk || phoneOk || "Enter a valid email or phone";
                 },
               }}
               render={({ field }) => (
-                <CustomInput whiteBg placeholder="xyz@xyz.com" value={field.value} onChangeText={(t) => field.onChange(t || "")} error={errors.emailOrPhone?.message} />
+                <CustomInput
+                  whiteBg
+                  placeholder="xyz@xyz.com"
+                  value={field.value}
+                  onChangeText={(t) => field.onChange(t || "")}
+                  error={errors.emailOrPhone?.message}
+                />
               )}
             />
 
             <Controller
               control={control}
               name="password"
-              rules={{ required: "Password is required", minLength: { value: 6, message: "Min length is 6" } }}
+              rules={{
+                required: "Password is required",
+                minLength: { value: 6, message: "Min length is 6" },
+              }}
               render={({ field }) => (
-                <CustomInput whiteBg secureTextEntry placeholder="Password" value={field.value} onChangeText={(t) => field.onChange(t || "")} error={errors.password?.message} />
+                <CustomInput
+                  whiteBg
+                  secureTextEntry
+                  placeholder="Password"
+                  value={field.value}
+                  onChangeText={(t) => field.onChange(t || "")}
+                  error={errors.password?.message}
+                />
               )}
             />
 
             <div className="mt-4">
               <CustomButton
                 title={isSubmitting ? "Creating..." : "Create Account"}
-                style={{ backgroundColor: "#2E7D32", color: "#fff", width: "100%", height: 48 }}
+                style={{
+                  backgroundColor: "#2E7D32",
+                  color: "#fff",
+                  width: "100%",
+                  height: 48,
+                }}
                 disabled={isSubmitting}
                 onPress={handleSubmit(onSubmit)}
               />
@@ -108,15 +144,23 @@ export default function RegisterPage() {
 
           <div className="mt-8 text-center text-sm text-gray-600">
             Have a account?
-            <button className="text-green-700 hover:underline ml-1" onClick={() => router.push("/login")}>Sign In</button>
+            <button
+              className="text-green-700 hover:underline ml-1"
+              onClick={() => router.push("/login")}
+            >
+              Sign In
+            </button>
           </div>
         </div>
 
         <div className="rounded-3xl overflow-hidden shadow-xl bg-white h-[520px] relative flex items-center justify-center">
-          <img alt="carousel image" src={images[activeIndex]} className="h-full w-full object-cover" />
+          <img
+            alt="carousel image"
+            src={images[activeIndex]}
+            className="h-full w-full object-cover"
+          />
         </div>
       </div>
     </div>
   );
 }
-
