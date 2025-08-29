@@ -1,4 +1,5 @@
 import axios, { AxiosError } from "axios";
+import { useAuthStore } from "@/lib/store/authStore";
 
 // Configure the base URL here or via NEXT_PUBLIC_API_BASE_URL
 const apiBaseUrl = process.env.NEXT_PUBLIC_API_BASE_URL || "";
@@ -13,9 +14,14 @@ export const http = axios.create({
 // Read token from storage if present
 function getAccessToken(): string | null {
   try {
-    return typeof window !== "undefined"
-      ? window.localStorage.getItem("access_token")
-      : null;
+    if (typeof window === "undefined") return null;
+    // Prefer zustand store if available
+    try {
+      const tokenFromStore = useAuthStore.getState().token;
+      if (tokenFromStore) return tokenFromStore;
+    } catch {}
+    // Fallback to localStorage mirror
+    return window.localStorage.getItem("access_token");
   } catch {
     return null;
   }
