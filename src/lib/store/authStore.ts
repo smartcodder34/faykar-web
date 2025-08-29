@@ -18,13 +18,19 @@ export const useAuthStore = create<AuthState>()(
     (set, get) => ({
       token: null,
       email: null,
+
       setAuth: ({ token, email }) =>
         set((state) => ({
           token: token !== undefined ? token : state.token,
           email: email !== undefined ? email : state.email,
         })),
+
       clearAuth: () => set({ token: null, email: null }),
+
       isLoggedIn: () => !!get().token,
+
+     
+
       login: ({ token, email }) => {
         set({ token, email: email ?? get().email });
         try {
@@ -33,6 +39,7 @@ export const useAuthStore = create<AuthState>()(
           }
         } catch {}
       },
+
       logout: () => {
         set({ token: null, email: null });
         try {
