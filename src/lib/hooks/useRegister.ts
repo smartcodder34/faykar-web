@@ -1,5 +1,10 @@
 import { useMutation } from "@tanstack/react-query";
-import { registerUser, RegisterPayload } from "@/lib/api/auth";
+import {
+  registerUser,
+  RegisterPayload,
+  verifyPayload,
+  verifyEmail,
+} from "@/lib/api/auth";
 import { useRouter } from "next/navigation";
 import { ApiError, toApiError } from "../http";
 import { showErrorToast, showSuccessToast } from "@/lib/toast";
@@ -11,7 +16,6 @@ import { showErrorToast, showSuccessToast } from "@/lib/toast";
 //   });
 // }
 
-
 export const useRegisterUser = () => {
   const router = useRouter();
   return useMutation({
@@ -20,30 +24,33 @@ export const useRegisterUser = () => {
       showSuccessToast("Registration successful");
       console.log("register success data:", data);
 
-      // router.push("/(auth)/create-account/verification");
+      router.push("/verification");
     },
     onError(error) {
       const apiError = toApiError(error) as ApiError;
-      showErrorToast(apiError.message || "Registration failed");
+
+      showErrorToast(apiError || "Registration failed");
       throw apiError;
     },
   });
 };
 
-// export const useVerifyEmail = (handleVerifyBottomSheetOpen: () => void) => {
-//   return useMutation({
-//     mutationFn: verifyEmail,
-//     onSuccess(data: any) {
-//       // showSuccessToast({
-//       //   message: data.message,
-//       // });
-//       handleVerifyBottomSheetOpen();
-//     },
-//     onError(error: any) {
-//       handleAxiosError(error);
-//     },
-//   });
-// };
+export const useVerifyEmail = () => {
+  const router = useRouter();
+
+  return useMutation({
+    mutationFn: verifyEmail,
+    onSuccess(data: verifyPayload) {
+      showSuccessToast("Email verification successful");
+      router.push("/login");
+    },
+    onError(error) {
+      const apiError = toApiError(error) as ApiError;
+      showErrorToast(apiError || "Registration failed");
+      throw apiError;
+    },
+  });
+};
 
 // export const useLoginUser = () => {
 //   const router = useRouter();
@@ -68,5 +75,3 @@ export const useRegisterUser = () => {
 //     },
 //   });
 // };
-
-
