@@ -3,7 +3,7 @@
 import { useRouter } from "next/navigation";
 import CustomInput from "@/customComp/CustomInput";
 import CustomButton from "@/customComp/CustomButton";
-import React, { useEffect, useMemo, useState } from "react";
+import React from "react";
 import { Controller, useForm } from "react-hook-form";
 import Logo from "@/customComp/Logo";
 import { AuthSlider } from "@/customComp/AuthSlider";
@@ -50,17 +50,20 @@ export default function RegisterPage() {
   const onSubmit = async (data: FormValues) => {
     // Simulate API call
     console.log("register submit", data);
-    if(data){
+    if (data) {
       registerUserData.mutate(data);
     }
-    
   };
 
   console.log("registerUserData", registerUserData);
 
   return (
     <div className="min-h-screen w-full px-6 py-10 md:px-10 lg:px-16 flex items-center justify-center relative">
-      <LoadingOverlay isOpen={registerUserData.isPending} message="Creating your account" />
+      <LoadingOverlay
+        isOpen={registerUserData.isPending}
+        message="Creating your account"
+        animationType="pulse"
+      />
       <div className="w-full max-w-6xl grid grid-cols-1 md:grid-cols-2 gap-10 items-center">
         <div className="max-w-md">
           <div className="mb-6">
@@ -113,7 +116,7 @@ export default function RegisterPage() {
               }) => (
                 <CustomInput
                   // label="Phone Number."
-                  
+
                   primary
                   placeholder="Enter your phone number"
                   keyboardType={"numeric"}
@@ -202,7 +205,7 @@ export default function RegisterPage() {
             <div className="mt-4">
               <CustomButton
                 // title={isSubmitting ? "Creating..." : "Create Account"}
-                title="Create Account"
+                title="Create Account234"
                 primary
                 // style={{
                 //   backgroundColor: "#2E7D32",
@@ -215,12 +218,6 @@ export default function RegisterPage() {
                 onPress={handleSubmit(onSubmit)}
               />
             </div>
-            {registerUserData.error && (
-              <p className="mt-3 text-sm text-red-600">
-                {(registerUserData.error as Error).message ||
-                  "Registration failed"}
-              </p>
-            )}
           </form>
 
           <div className="mt-8 text-center text-sm text-gray-600">
