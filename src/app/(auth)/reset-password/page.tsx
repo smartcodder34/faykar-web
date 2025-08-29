@@ -5,11 +5,15 @@ import { Controller, useForm } from "react-hook-form";
 import CustomInput from "@/customComp/CustomInput";
 import CustomButton from "@/customComp/CustomButton";
 import Logo from "@/customComp/Logo";
+import React from "react";
 
-type FormValues = { email: string };
+type FormValues = { password: string; password_confirmation: string };
 
-export default function ForgotPage() {
+export default function ResetPasswordpage() {
   const router = useRouter();
+
+  const [isSecureEntry, setIsSecureEntry] = React.useState(true);
+    const [comPassIsSecureEntry, setComPassIsSecureEntry] = React.useState(true);
 
   const {
     control,
@@ -19,16 +23,16 @@ export default function ForgotPage() {
   } = useForm({
     mode: "onChange",
     defaultValues: {
-      email: "",
+      password: "",
+      password_confirmation: "",
     },
   });
 
-  const onSubmit = async (data: FormValues) => {
-   
-    console.log("forgot submit", data);
+  const pwd = watch("password");
 
-    router.push("/reset-password");
-   
+
+  const onSubmit = async (data: FormValues) => {
+    console.log("forgot submit", data);
   };
 
   return (
@@ -47,24 +51,51 @@ export default function ForgotPage() {
         <form className="mt-8">
           <Controller
             control={control}
-            name="email"
+            name="password"
             rules={{
-              required: "Email is required",
+              required: "passowrd is required",
+              minLength: {
+                value: 8,
+                message: "Password should be at least 8 characters long",
+              },
               pattern: {
-                value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
-                message: "Invalid email address",
+                value:
+                  /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[A-Za-z\d@$!%*?&.,]{8,}$/,
+                message:
+                  "Password must include uppercase, lowercase, and a number.",
               },
             }}
             render={({ field: { onChange, onBlur, value } }) => (
               <CustomInput
                 primary
-                // label="Email or Phone Number"
-                placeholder="Enter your email"
+                // label="Password"
+                placeholder="Enter your Password"
+                secureTextEntry={isSecureEntry}
                 // iconPostion="left"
                 onChangeText={onChange}
                 onBlur={onBlur}
                 value={value}
-                error={errors.email?.message}
+                error={errors.password?.message}
+              />
+            )}
+          />
+
+          <Controller
+            control={control}
+            name="password_confirmation"
+            rules={{
+              required: "confirm Password is required",
+              validate: (value) => value === pwd || "Passwords do not match",
+            }}
+            render={({ field: { onChange, onBlur, value } }) => (
+              <CustomInput
+                primary
+                // label="Re-type password"
+                placeholder="confirm password"
+                secureTextEntry={comPassIsSecureEntry}
+                onChangeText={onChange}
+                value={value}
+                error={errors.password_confirmation?.message}
               />
             )}
           />
@@ -72,7 +103,7 @@ export default function ForgotPage() {
           <div className="mt-4">
             <CustomButton
               // title={isSubmitting ? "Sending..." : "Send Reset Link"}]
-              title={ "Send Reset Link"}
+              title={"Send Reset Link"}
               primary
               // loading={isSubmitting}
               disabled={!isValid}
