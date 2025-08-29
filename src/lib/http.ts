@@ -53,6 +53,30 @@ http.interceptors.response.use(
   }
 );
 
+// export type ApiError = {
+//   message: string;
+//   code?: string | number;
+//   details?: unknown;
+// };
+
+// export function toApiError(err: unknown): ApiError {
+//   if (axios.isAxiosError(err)) {
+//     const data: unknown = err.response?.data;
+//     const message =
+//       (typeof data === "object" && data && (data as { message?: string }).message)
+//         || err.message
+//         || "Request failed";
+//     return { message, code: err.response?.status, details: data };
+//   }
+//   const fallbackMessage =
+//     typeof err === "object" && err && (err as { message?: string }).message
+//       ? (err as { message: string }).message
+//       : "Unknown error";
+//   return { message: fallbackMessage };
+// }
+
+
+
 export type ApiError = {
   message: string;
   code?: string | number;
@@ -62,16 +86,32 @@ export type ApiError = {
 export function toApiError(err: unknown): ApiError {
   if (axios.isAxiosError(err)) {
     const data: unknown = err.response?.data;
-    const message =
-      (typeof data === "object" && data && (data as { message?: string }).message)
-        || err.message
-        || "Request failed";
-    return { message, code: err.response?.status, details: data };
-  }
-  const fallbackMessage =
-    typeof err === "object" && err && (err as { message?: string }).message
-      ? (err as { message: string }).message
-      : "Unknown error";
-  return { message: fallbackMessage };
-}
 
+    if (typeof data === "object" && data !== null && "message" in data) {
+      // Already looks like an ApiError
+      return {
+        message: (data as { message: string }).message,
+        code: (data as { code?: string | number }).code ?? err.response?.status,
+        details: (data as { details?: unknown }).details ?? data,
+      };
+    }
+
+    // Fallback for AxiosError without ApiError structure
+    return {
+      message: err.message || "Request failed",
+      code: err.response?.status,
+      details: data,
+    };
+  }
+
+  // Non-Axios error
+  if (typeof err === "object" && err !== null && "message" in err) {
+    return {
+      message: (err as { message: string }).message,
+      code: (err as { code?: string | number }).code,
+      details: (err as { details?: unknown }).details,
+    };
+  }
+
+  return { message: "Unknown error" };
+}
