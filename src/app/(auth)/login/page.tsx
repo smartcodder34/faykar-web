@@ -3,6 +3,8 @@
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { isLoggedIn } from "@/lib/auth";
+import { useAuthStore } from "@/lib/store/authStore";
+import { showSuccessToast } from "@/lib/toast";
 import CustomInput from "@/customComp/CustomInput";
 import CustomButton from "@/customComp/CustomButton";
 import Logo from "@/customComp/Logo";
@@ -31,9 +33,11 @@ export default function LoginPage() {
   const isSubmitting = formState.isSubmitting;
 
   const onSubmit = async (data: FormValues) => {
-   
     console.log("login submit", data);
-    // router.push("/dashboard");
+    // Simulate successful login; integrate with real API when ready
+    useAuthStore.getState().login({ token: "demo-token", email: data.emailOrPhone });
+    showSuccessToast("Logged in");
+    router.push("/dashboard");
   };
 
   return (
