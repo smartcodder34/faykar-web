@@ -9,12 +9,15 @@ import Logo from "@/customComp/Logo";
 import { AuthSlider } from "@/customComp/AuthSlider";
 import { useRegisterUser } from "@/lib/hooks/useRegister";
 import LoadingOverlay from "@/customComp/LoadingOverlay";
+import { useAuthStore } from "@/lib/store/authStore";
 
 export default function RegisterPage() {
   const router = useRouter();
 
   const [isSecureEntry, setIsSecureEntry] = React.useState(true);
   const [comPassIsSecureEntry, setComPassIsSecureEntry] = React.useState(true);
+
+  const setAuth = useAuthStore.getState().setAuth;
 
   type FormValues = {
     full_name: string;
@@ -24,26 +27,23 @@ export default function RegisterPage() {
     password_confirmation: string;
   };
 
-    const {
-      control,
-      handleSubmit,
-      watch,
-      formState: { errors, isValid },
-    } = useForm({
-      mode: "onChange",
-      defaultValues: {
-        full_name: "",
-        email: "",
-        password: "",
-        phone_number: "",
-        password_confirmation: "",
-      },
-    });
+  const {
+    control,
+    handleSubmit,
+    watch,
+    formState: { errors, isValid },
+  } = useForm({
+    mode: "onChange",
+    defaultValues: {
+      full_name: "",
+      email: "",
+      password: "",
+      phone_number: "",
+      password_confirmation: "",
+    },
+  });
 
   const pwd = watch("password");
-
-
-  
 
   const registerUserData = useRegisterUser();
 
@@ -52,10 +52,9 @@ export default function RegisterPage() {
     console.log("register submit", data);
     if (data) {
       registerUserData.mutate(data);
+      setAuth({ email: data.email });
     }
   };
-
-  console.log("registerUserData", registerUserData);
 
   return (
     <div className="min-h-screen w-full px-6 py-10 md:px-10 lg:px-16 flex items-center justify-center relative">

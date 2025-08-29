@@ -3,11 +3,14 @@ import {
   registerUser,
   RegisterPayload,
   verifyPayload,
+  loginPayload,
   verifyEmail,
+  loginUser,
 } from "@/lib/api/auth";
 import { useRouter } from "next/navigation";
 import { ApiError, toApiError } from "../http";
 import { showErrorToast, showSuccessToast } from "@/lib/toast";
+import { useAuthStore } from "../store/authStore";
 
 // export function useRegister() {
 //   return useMutation<RegisterResponse, Error, RegisterPayload>({
@@ -42,6 +45,8 @@ export const useVerifyEmail = () => {
     mutationFn: verifyEmail,
     onSuccess(data: verifyPayload) {
       showSuccessToast("Email verification successful");
+      console.log("email verify success data:", data);
+
       router.push("/login");
     },
     onError(error) {
@@ -52,26 +57,29 @@ export const useVerifyEmail = () => {
   });
 };
 
-// export const useLoginUser = () => {
-//   const router = useRouter();
-//   const setIsLoggedIn = useAuthStore().setIsLoggedIn;
+export const useLoginUser = () => {
+  const router = useRouter();
+  const IsLoggedIn = useAuthStore.getState().isLoggedIn;
+  
 
-//   return useMutation({
-//     mutationFn: loginUser,
-//     async onSuccess(data: any) {
-//       // showSuccessToast({
-//       //   message: data.message,
-//       // });
-//       if (data) {
-//         await AsyncStorage.setItem("token", data.data.access_token.token);
-//         setIsLoggedIn(true);
-//         router.push("/(tabs)/homepage");
-//         console.log("data000:", data);
-//       }
-//     },
-//     onError(error: any) {
-//       console.log("login error", error.response?.status === 403);
-//       handleAxiosError(error);
-//     },
-//   });
-// };
+  return useMutation({
+    mutationFn: loginUser,
+    async onSuccess(data: loginPayload) {
+      showSuccessToast("Login successful");
+      
+      if (data) {
+        useAuthStore
+          .getState()
+          .login({ token: data?.data?.access_token.token  });
+        IsLoggedIn();
+        // router.push("/(tabs)/homepage");
+        console.log("data000:", data);
+      }
+    },
+    onError(error) {
+      const apiError = toApiError(error) as ApiError;
+      showErrorToast(apiError || "Registration failed");
+      throw apiError;
+    },
+  });
+};
