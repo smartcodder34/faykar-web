@@ -75,7 +75,7 @@ export default function ForgotPage() {
               title={ "Send Reset Link"}
               primary
               // loading={isSubmitting}
-              disabled={!isValid}
+              // disabled={!isValid}
               onPress={handleSubmit(onSubmit)}
             />
           </div>

@@ -204,7 +204,7 @@ export default function RegisterPage() {
             <div className="mt-4">
               <CustomButton
                 // title={isSubmitting ? "Creating..." : "Create Account"}
-                title="Create Account234"
+                title="Create Account"
                 primary
                 // style={{
                 //   backgroundColor: "#2E7D32",
