@@ -57,6 +57,10 @@ export const useVerifyEmail = () => {
   });
 };
 
+type AuthSuccess = {
+  data?: { access_token?: { token?: string } };
+};
+
 export const useLoginUser = () => {
   const router = useRouter();
   const IsLoggedIn = useAuthStore.getState().isLoggedIn;
@@ -64,13 +68,13 @@ export const useLoginUser = () => {
 
   return useMutation({
     mutationFn: loginUser,
-    async onSuccess(data: loginPayload) {
+    async onSuccess(data: AuthSuccess) {
       showSuccessToast("Login successful");
       
       if (data) {
         useAuthStore
           .getState()
-          .login({ token: data?.data?.access_token.token  });
+          .login({ token: data?.data?.access_token?.token || "" });
         IsLoggedIn();
         // router.push("/(tabs)/homepage");
         console.log("data000:", data);
