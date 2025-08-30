@@ -13,7 +13,7 @@ export default function AuthLayout({
 
   useEffect(() => {
     if (isLoggedIn()) {
-      router.replace("/dashboard");
+      router.replace("/home");
     }
   }, [router]);
 
