@@ -52,33 +52,47 @@ export default function StoriesRow() {
 function StoryCard({ story }: { story: Story }) {
   if (story.isAdd) {
     return (
-      <div className="w-28 shrink-0 bg-white rounded-2xl border-2 border-dashed border-gray-300 hover:border-green-600 transition-colors flex flex-col items-center justify-center p-4 cursor-pointer">
-        <div className="w-10 h-10 rounded-full bg-gray-100 flex items-center justify-center mb-3">
-          <Plus className="w-5 h-5 text-gray-500" />
+      <div className="w-28 shrink-0 cursor-pointer">
+        <div className="bg-white rounded-2xl border border-gray-200 overflow-hidden shadow-sm">
+          <div className="relative aspect-[3/4] bg-gray-50 border-b border-gray-100">
+            <div className="absolute -bottom-5 left-1/2 -translate-x-1/2">
+              <div className="w-8 h-8 rounded-full bg-white shadow flex items-center justify-center">
+                <div className="w-7 h-7 rounded-full bg-green-600 text-white flex items-center justify-center">
+                  <Plus className="w-4 h-4" />
+                </div>
+              </div>
+            </div>
+          </div>
+          <div className="px-3 pt-6 pb-3 text-center">
+            <span className="text-sm font-medium text-gray-900">{story.name}</span>
+          </div>
         </div>
-        <span className="text-gray-600 text-sm font-medium">{story.name}</span>
       </div>
     );
   }
 
   return (
-    <div className="w-28 shrink-0 bg-white rounded-2xl border border-gray-100 overflow-hidden shadow-sm">
-      <div className="relative aspect-[3/4]">
-        {story.image && (
-          <img
-            src={story.image}
-            alt={story.name}
-            className="absolute inset-0 w-full h-full object-cover"
-          />
-        )}
-        <div className="absolute -bottom-5 left-2 w-8 h-8 rounded-full bg-white shadow flex items-center justify-center">
-          <span className="text-gray-700 text-xs font-medium">
-            {story.name.charAt(0)}
-          </span>
+    <div className="w-28 shrink-0">
+      <div className="bg-white rounded-2xl border border-gray-100 overflow-hidden shadow-sm">
+        <div className="relative aspect-[3/4]">
+          {story.image && (
+            <img
+              src={story.image}
+              alt={story.name}
+              className="absolute inset-0 w-full h-full object-cover"
+            />
+          )}
+          <div className="absolute -bottom-5 left-1/2 -translate-x-1/2">
+            <div className="w-8 h-8 rounded-full bg-white shadow ring-2 ring-white overflow-hidden flex items-center justify-center">
+              <span className="text-gray-700 text-xs font-medium">
+                {story.name.charAt(0)}
+              </span>
+            </div>
+          </div>
         </div>
-      </div>
-      <div className="px-3 pt-6 pb-3">
-        <span className="text-sm font-medium text-gray-900">{story.name}</span>
+        <div className="px-3 pt-6 pb-3 text-center">
+          <span className="text-sm font-medium text-gray-900">{story.name}</span>
+        </div>
       </div>
     </div>
   );

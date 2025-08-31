@@ -2,7 +2,7 @@
 "use client";
 
 import React from "react";
-import { Heart, MessageCircle, Share, Bookmark, Users } from "lucide-react";
+import { Heart, MessageCircle, Share, Bookmark, Users, MapPin, Clock } from "lucide-react";
 
 export default function SponsoredPost() {
   return (
@@ -58,8 +58,12 @@ export default function SponsoredPost() {
           </div>
 
           <div className="flex items-center space-x-4 text-sm text-gray-500">
-            <span>13.5KM</span>
-            <span>54mins Away</span>
+            <span className="inline-flex items-center gap-1">
+              <MapPin className="w-4 h-4 text-green-600" /> 13.5KM
+            </span>
+            <span className="inline-flex items-center gap-1">
+              <Clock className="w-4 h-4 text-gray-600" /> 54mins Away
+            </span>
           </div>
         </div>
 
