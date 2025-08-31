@@ -1,8 +1,17 @@
+import Header from '@/customComp/dashboard/Header';
+import LeftSidebar from '@/customComp/dashboard/LeftSidebar';
+import MainContent from '@/customComp/dashboard/MainContent';
+import RightSidebar from '@/customComp/dashboard/RightSidebar';
+
 export default function DashboardPage() {
   return (
-    <div style={{ padding: 24 }}>
-      <h1>Dashboard</h1>
-      <p>Protected route inside (main).</p>
+    <div className="min-h-screen bg-gray-50">
+      <Header />
+      <div className="flex">
+        <LeftSidebar />
+        <MainContent />
+        <RightSidebar />
+      </div>
     </div>
   );
 }
