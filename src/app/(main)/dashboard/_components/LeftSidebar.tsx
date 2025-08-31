@@ -3,7 +3,7 @@
 import Image from "next/image";
 import React from "react";
 import { BellIcon, GlobeIcon, HomeIcon, MessageIcon, SearchIcon, SettingsSlidersIcon, UsersIcon } from "./Icons";
-import logo from "@/assets/images/logo.png";
+import profileImg from "@/assets/images/profile.jpg";
 
 type NavItem = {
   icon: React.ReactNode;
@@ -24,10 +24,16 @@ export const LeftSidebar: React.FC = () => {
     <aside className="hidden lg:block lg:w-72 xl:w-80 shrink-0 border-r border-gray-200/70 h-[calc(100vh-56px)] sticky top-14">
       <div className="p-5">
         <div className="flex items-center gap-3">
-          <div className="h-10 w-10 rounded-full overflow-hidden">
-            <Image src={logo} alt="logo" className="h-full w-full object-contain" />
+          <div className="h-14 w-14 rounded-full overflow-hidden">
+            <Image
+              src={profileImg}
+              alt="logo"
+              className="h-full w-full object-cover"
+            />
           </div>
-          <span className="text-xl font-semibold tracking-wide">FAYKAR</span>
+          <span className=" text-lg font-semibold tracking-wide text-[#2E6939]">
+            Virat Kohli
+          </span>
         </div>
 
         <div className="mt-5">
@@ -59,7 +65,9 @@ export const LeftSidebar: React.FC = () => {
         </nav>
 
         <div className="mt-8 space-y-2">
-          <div className="text-xs font-semibold uppercase tracking-wide text-gray-500">About</div>
+          <div className="text-xs font-semibold uppercase tracking-wide text-gray-500">
+            About
+          </div>
           <button className="w-full flex items-center justify-between rounded-lg px-3 py-2 hover:bg-gray-100/70 text-sm">
             <span>About</span>
             <span className="text-gray-400">›</span>
