@@ -64,16 +64,24 @@ export const useLoginUser = () => {
 
   return useMutation({
     mutationFn: loginUser,
-    async onSuccess(data: loginPayload) {
+    async onSuccess(response: unknown) {
       showSuccessToast("Login successful");
       
-      if (data) {
-        useAuthStore
-          .getState()
-          .login({ token: data?.data?.access_token.token  });
+      // Try to extract token from common API response shapes
+      const r = (response as { data?: unknown }) ?? undefined;
+      const inner = r?.data ?? response;
+      const token = (
+        inner as { access_token?: { token?: string } }
+      )?.access_token?.token ||
+      (
+        (inner as { data?: { access_token?: { token?: string } } })?.data
+      )?.access_token?.token || null;
+
+      if (typeof token === "string" && token.length > 0) {
+        useAuthStore.getState().login({ token });
         IsLoggedIn();
         // router.push("/(tabs)/homepage");
-        console.log("data000:", data);
+        console.log("login success payload:", response);
       }
     },
     onError(error) {
