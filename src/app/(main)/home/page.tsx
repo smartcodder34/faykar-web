@@ -29,7 +29,6 @@
 //   );
 // }
 
-
 // // src/app/(main)/page.tsx (or homepage/page.tsx)
 // "use client";
 
@@ -60,22 +59,21 @@
 //   );
 // }
 
-
 // src/app/(main)/page.tsx
 "use client";
 
 import React from "react";
 import ResponsiveLayout from "@/components/layout/ResponsiveLayout";
 import ShareProductSection from "@/components/homepage/ShareProductSection";
-import ProductGrid from "@/components/homepage/ProductGrid";
 import SponsoredPost from "@/components/homepage/SponsoredPost";
+import StoriesRow from "@/components/homepage/StoriesRow";
 
 export default function HomePage() {
   return (
     <ResponsiveLayout>
       <div className="space-y-6">
         <ShareProductSection />
-        <ProductGrid />
+        <StoriesRow />
         <SponsoredPost />
       </div>
     </ResponsiveLayout>
