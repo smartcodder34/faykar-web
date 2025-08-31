@@ -1,20 +1,28 @@
 "use client";
 
-import { useEffect } from "react";
+import React, { useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { isLoggedIn } from "@/lib/auth";
+import { useAuthStore } from "@/lib/store/authStore";
+import { showSuccessToast } from "@/lib/toast";
 import CustomInput from "@/customComp/CustomInput";
 import CustomButton from "@/customComp/CustomButton";
 import Logo from "@/customComp/Logo";
 import { Controller, useForm } from "react-hook-form";
+import { AuthSlider } from "@/customComp/AuthSlider";
+import { useLoginUser } from "@/lib/hooks/useRegister";
+import LoadingOverlay from "@/customComp/LoadingOverlay";
 
 type FormValues = {
-  emailOrPhone: string;
+  email: string;
   password: string;
 };
 
 export default function LoginPage() {
   const router = useRouter();
+  const [isSecureEntry, setIsSecureEntry] = React.useState(true);
+
+  const userLogin = useLoginUser();
 
   useEffect(() => {
     if (isLoggedIn()) {
@@ -22,22 +30,34 @@ export default function LoginPage() {
     }
   }, [router]);
 
-  const { control, handleSubmit, formState } = useForm<FormValues>({
-    defaultValues: { emailOrPhone: "", password: "" },
-    mode: "onTouched",
+  const {
+    control,
+    handleSubmit,
+    watch,
+    formState: { errors, isValid },
+  } = useForm({
+    mode: "onChange",
+    defaultValues: {
+      email: "",
+      password: "",
+    },
   });
 
-  const errors = formState.errors;
-  const isSubmitting = formState.isSubmitting;
-
   const onSubmit = async (data: FormValues) => {
-   
     console.log("login submit", data);
-    // router.push("/dashboard");
+    // Simulate successful login; integrate with real API when ready
+    if(data){
+      userLogin.mutate(data);
+    }
   };
 
   return (
     <div className="min-h-screen w-full px-6 py-10 md:px-10 lg:px-16 flex items-center justify-center">
+      <LoadingOverlay
+        isOpen={userLogin.isPending}
+        message="logging in..."
+        animationType="pulse"
+      />
       <div className="w-full max-w-6xl grid grid-cols-1 md:grid-cols-2 gap-10 items-center">
         <div className="max-w-md">
           <div className="mb-6">
@@ -53,60 +73,60 @@ export default function LoginPage() {
           <form className="mt-8">
             <Controller
               control={control}
-              name="emailOrPhone"
+              name="email"
               rules={{
                 required: "Email is required",
-                validate: (value) => {
-                  const v = value || "";
-                  const emailOk = v.indexOf("@") > 0 && v.indexOf(".") > 0;
-                  let phoneOk = false;
-                  let s = v.trim();
-                  if (s.charAt(0) === "+") s = s.slice(1);
-                  if (s.length >= 7) {
-                    phoneOk = true;
-                    for (let i = 0; i < s.length; i++) {
-                      const ch = s.charAt(i);
-                      if (ch < "0" || ch > "9") {
-                        phoneOk = false;
-                        break;
-                      }
-                    }
-                  }
-                  return emailOk || phoneOk || "Enter a valid email or phone";
+                pattern: {
+                  value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
+                  message: "Invalid email address",
                 },
               }}
-              render={({ field }) => (
+              render={({ field: { onChange, onBlur, value } }) => (
                 <CustomInput
-                  whiteBg
-                  placeholder="Email or Phone Number"
-                  value={field.value}
-                  onChangeText={(t) => field.onChange(t || "")}
-                  error={errors.emailOrPhone?.message}
+                  primary
+                  // label="Email or Phone Number"
+                  placeholder="Enter your email or phone number"
+                  // iconPostion="left"
+                  onChangeText={onChange}
+                  onBlur={onBlur}
+                  value={value}
+                  error={errors.email?.message}
                 />
               )}
             />
 
-            <div className="flex items-center justify-between">
-              <div className="flex-1">
-                <Controller
-                  control={control}
-                  name="password"
-                  rules={{
-                    required: "Password is required",
-                    minLength: { value: 6, message: "Min length is 6" },
-                  }}
-                  render={({ field }) => (
-                    <CustomInput
-                      whiteBg
-                      secureTextEntry
-                      placeholder="Password"
-                      value={field.value}
-                      onChangeText={(t) => field.onChange(t || "")}
-                      error={errors.password?.message}
-                    />
-                  )}
+            <Controller
+              control={control}
+              name="password"
+              rules={{
+                required: "passowrd is required",
+                minLength: {
+                  value: 8,
+                  message: "Password should be at least 8 characters long",
+                },
+                pattern: {
+                  value:
+                    /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[A-Za-z\d@$!%*?&.,]{8,}$/,
+                  message:
+                    "Password must include uppercase, lowercase, and a number.",
+                },
+              }}
+              render={({ field: { onChange, onBlur, value } }) => (
+                <CustomInput
+                  primary
+                  // label="Password"
+                  placeholder="Enter your Password"
+                  secureTextEntry={isSecureEntry}
+                  // iconPostion="left"
+                  onChangeText={onChange}
+                  onBlur={onBlur}
+                  value={value}
+                  error={errors.password?.message}
                 />
-              </div>
+              )}
+            />
+
+            <div className="mt-2 flex justify-end">
               <button
                 type="button"
                 className="text-xs text-green-700 hover:underline ml-3 whitespace-nowrap"
@@ -118,14 +138,15 @@ export default function LoginPage() {
 
             <div className="mt-4">
               <CustomButton
-                title={isSubmitting ? "Signing in..." : "Login"}
+                // title={isSubmitting ? "Signing in..." : "Login"}
+                title={"Login"}
                 style={{
                   backgroundColor: "#2E7D32",
                   color: "#fff",
                   width: "100%",
                   height: 48,
                 }}
-                disabled={isSubmitting}
+                // disabled={isSubmitting}
                 onPress={handleSubmit(onSubmit)}
               />
             </div>
@@ -142,16 +163,8 @@ export default function LoginPage() {
           </div>
         </div>
 
-        <div className="rounded-3xl overflow-hidden shadow-xl bg-white h-[520px] relative flex items-center justify-center">
-          {/* Replace with /login-hero.jpg from Image 1 */}
-          <img
-            alt="login hero"
-            src="/login-hero.jpg"
-            className="h-full w-full object-cover"
-          />
-        </div>
+        <AuthSlider />
       </div>
     </div>
   );
 }
-
