@@ -17,15 +17,7 @@ export default function ResponsiveLayout({ children }: ResponsiveLayoutProps) {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      <Header />
-
-      {/* Mobile Menu Button */}
-      <button
-        onClick={() => setSidebarOpen(true)}
-        className="fixed top-20 left-4 z-40 lg:hidden bg-white p-2 rounded-lg shadow-md"
-      >
-        <Menu className="w-5 h-5" />
-      </button>
+      <Header onOpenSidebar={() => setSidebarOpen(true)} />
 
       <div className="flex pt-16">
         {/* Sidebar */}

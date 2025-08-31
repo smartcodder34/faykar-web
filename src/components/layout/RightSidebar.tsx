@@ -6,7 +6,7 @@ import React from "react";
 export default function RightSidebar() {
   return (
     <aside className="w-80 h-full bg-white border-l border-gray-200 overflow-y-auto">
-      <div className="p-6 space-y-6">
+      <div className="p-5 space-y-6">
         {/* Latest Post Section */}
         <div className="bg-gradient-to-r from-purple-500 to-pink-500 rounded-2xl p-4 text-white relative overflow-hidden">
           <div className="relative z-10">
