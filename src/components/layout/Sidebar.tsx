@@ -11,12 +11,13 @@ import {
   Globe,
   HelpCircle,
   Info,
+  Settings,
 } from "lucide-react";
 import CustomInput from "@/customComp/CustomInput";
 
 export default function Sidebar() {
   return (
-    <aside className="fixed left-0 top-16 w-64 h-full bg-white border-r border-gray-200 overflow-y-auto">
+    <aside className="w-64 h-full bg-white border-r border-gray-200 overflow-y-auto">
       <div className="p-6 space-y-6">
         {/* User Profile Section */}
         <div className="flex items-center space-x-3">
@@ -32,6 +33,7 @@ export default function Sidebar() {
         <CustomInput
           placeholder="Search"
           leftIcon={<Search className="w-4 h-4 text-gray-400" />}
+          rightIcon={<Settings className="w-4 h-4 text-gray-400" />}
         />
 
         {/* Navigation Menu */}

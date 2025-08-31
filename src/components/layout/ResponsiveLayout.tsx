@@ -29,17 +29,16 @@ export default function ResponsiveLayout({ children }: ResponsiveLayoutProps) {
 
       <div className="flex pt-16">
         {/* Sidebar */}
-        <div
-          className={`
-          fixed lg:static inset-y-0 left-0 z-30 w-64 transform transition-transform duration-300 ease-in-out lg:translate-x-0
-          ${sidebarOpen ? "translate-x-0" : "-translate-x-full"}
-        `}
-        >
-          <Sidebar />
-          {/* Mobile overlay */}
+        <div className="lg:static">
+          <div
+            className={`fixed top-16 bottom-0 left-0 z-30 w-64 bg-white transform transition-transform duration-300 ease-in-out lg:translate-x-0 lg:static lg:top-auto lg:bottom-auto lg:left-auto
+            ${sidebarOpen ? "translate-x-0" : "-translate-x-full"}`}
+          >
+            <Sidebar />
+          </div>
           {sidebarOpen && (
             <div
-              className="fixed inset-0 bg-black bg-opacity-50 lg:hidden"
+              className="fixed inset-0 bg-black/50 lg:hidden"
               onClick={() => setSidebarOpen(false)}
             />
           )}
@@ -52,7 +51,9 @@ export default function ResponsiveLayout({ children }: ResponsiveLayoutProps) {
 
         {/* Right Sidebar */}
         <div className="hidden lg:block">
-          <RightSidebar />
+          <div className="fixed top-16 right-0 bottom-0">
+            <RightSidebar />
+          </div>
         </div>
       </div>
     </div>
