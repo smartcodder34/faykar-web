@@ -21,7 +21,7 @@ const navItems: NavItem[] = [
 
 export const LeftSidebar: React.FC = () => {
   return (
-    <aside className="hidden lg:block lg:w-72 xl:w-80 shrink-0 border-r border-gray-200/70 h-[calc(100vh-0px)] sticky top-0">
+    <aside className="hidden lg:block lg:w-72 xl:w-80 shrink-0 border-r border-gray-200/70 h-[calc(100vh-56px)] sticky top-14">
       <div className="p-5">
         <div className="flex items-center gap-3">
           <div className="h-10 w-10 rounded-full overflow-hidden">
