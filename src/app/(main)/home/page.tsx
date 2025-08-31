@@ -67,7 +67,7 @@
 import React from "react";
 import ResponsiveLayout from "@/components/layout/ResponsiveLayout";
 import ShareProductSection from "@/components/homepage/ShareProductSection";
-import ProductGrid from "@/components/homepage/ProductGrid";
+import StoriesRow from "@/components/homepage/StoriesRow";
 import SponsoredPost from "@/components/homepage/SponsoredPost";
 
 export default function HomePage() {
@@ -75,7 +75,7 @@ export default function HomePage() {
     <ResponsiveLayout>
       <div className="space-y-6">
         <ShareProductSection />
-        <ProductGrid />
+        <StoriesRow />
         <SponsoredPost />
       </div>
     </ResponsiveLayout>
