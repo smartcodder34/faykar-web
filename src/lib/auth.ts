@@ -1,5 +1,10 @@
-// Simple mock for authentication state. Toggle to simulate logged in/out.
+import { useAuthStore } from "@/lib/store/authStore";
+
 export function isLoggedIn(): boolean {
-  return false;
+  try {
+    return !!useAuthStore.getState().token;
+  } catch {
+    return false;
+  }
 }
 

@@ -12,6 +12,10 @@ export type verifyPayload = {
   email: string;
   otp: string;
 };
+export type loginPayload = {
+  email: string;
+  password: string;
+};
 
 export const registerUser = async (payload: RegisterPayload)=> {
   try {
@@ -32,9 +36,7 @@ export const verifyEmail = async (data: verifyPayload) => {
   }
 };
 
-export const loginUser = async (
-  data: Record<string, unknown> | { email?: string; phone_number?: string; password: string }
-) => {
+export const loginUser = async (data: loginPayload) => {
   try {
     const res = await http.post(`/auth/authenticate`, data);
     return res.data;

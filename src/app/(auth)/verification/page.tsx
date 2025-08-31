@@ -2,10 +2,19 @@
 
 import { AuthSlider } from "@/customComp/AuthSlider";
 import CustomButton from "@/customComp/CustomButton";
+import LoadingOverlay from "@/customComp/LoadingOverlay";
 import Logo from "@/customComp/Logo";
+import { useVerifyEmail } from "@/lib/hooks/useRegister";
+import { useAuthStore } from "@/lib/store/authStore";
 import { useEffect, useMemo, useRef, useState } from "react";
 
 export default function VerificationPage() {
+
+  const verifyEmail =  useVerifyEmail()
+  const email = useAuthStore.getState().email
+
+console.log("email from store", email);
+
   const [digits, setDigits] = useState(["", "", "", ""]);
   const inputs = [
     useRef<HTMLInputElement>(null),
@@ -41,6 +50,7 @@ export default function VerificationPage() {
      const onVerify = async () => {
        if (code.length !== 4) return;
       //  setSubmitting(true);
+        verifyEmail.mutate({ email: email || "", otp: code });
        
        console.log("verify code", code);
       //  setSubmitting(false);
@@ -49,20 +59,23 @@ export default function VerificationPage() {
 
   return (
     <div className="min-h-screen w-full px-6 py-10 md:px-10 lg:px-16 flex items-center justify-center">
+      <LoadingOverlay
+        isOpen={verifyEmail.isPending}
+        message="Verifying email..."
+        animationType="pulse"
+      />
       <div className="w-full max-w-6xl grid grid-cols-1 md:grid-cols-2 gap-10 items-center">
         <div className="max-w-md">
           <div className="mb-6">
             <Logo height={30} />
           </div>
-
           <h1 className="text-4xl md:text-5xl font-semibold text-green-700 tracking-tight">
             Verify Email
           </h1>
           <p className="mt-3 text-sm text-gray-600">
             Enter the 4-digit code we sent to{" "}
-            {/* <span className="font-medium">{identifier}</span>. */}
           </p>
-
+          <p className="font-medium">{email}</p>.
           <div className="mt-8 flex items-center gap-3">
             {digits.map((d, i) => (
               <input
@@ -78,17 +91,13 @@ export default function VerificationPage() {
               />
             ))}
           </div>
-
           <div className="mt-4">
             <CustomButton
-              title={submitting ? "Verifying..." : "Verify"}
-              style={{
-                backgroundColor: "#2E7D32",
-                color: "#fff",
-                width: "100%",
-                height: 48,
-              }}
-              disabled={submitting || code.length !== 4}
+              title={verifyEmail.isPending ? "Verifying..." : "Verify"}
+              
+              primary
+              loading={verifyEmail.isPending}
+              disabled={verifyEmail.isPending || code.length !== 4}
               onPress={onVerify}
             />
           </div>
