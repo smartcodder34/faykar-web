@@ -15,7 +15,7 @@ const recents = [
 
 export const RightSidebar: React.FC = () => {
   return (
-    <aside className="hidden xl:block xl:w-80 shrink-0 h-[calc(100vh-0px)] sticky top-0">
+    <aside className="hidden xl:block xl:w-80 shrink-0 h-[calc(100vh-56px)] sticky top-14">
       <div className="p-5 space-y-5">
         <div className="rounded-xl bg-white border border-gray-200/70 shadow-sm p-4">
           <div className="text-sm font-semibold text-gray-900">Your Latest Post</div>
