@@ -4,7 +4,7 @@ import React, { useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import CustomInput from "@/customComp/CustomInput";
 import CustomButton from "@/customComp/CustomButton";
-import { User, Mail, MapPin } from "lucide-react";
+import { User, Mail, MapPin, FileText } from "lucide-react";
 import CustomSelect from "@/customComp/CustomSelect";
 
 type EditProfileFormValues = {
@@ -32,6 +32,7 @@ export default function EditDetailsCard() {
       username: "Namaha Chandra", // Pre-filled with current user data
       email: "namaha.chandra@example.com",
       address: "123 Main Street, City, Country",
+      bio:""
     },
   });
 
@@ -137,6 +138,38 @@ export default function EditDetailsCard() {
                   onBlur={onBlur}
                   value={value}
                   error={errors.address?.message}
+                />
+              </div>
+            )}
+          />
+
+          {/* Bio Field */}
+          <Controller
+            control={control}
+            name="bio"
+            rules={{
+              maxLength: {
+                value: 500,
+                message: "Bio must not exceed 500 characters",
+              },
+            }}
+            render={({ field: { onChange, onBlur, value } }) => (
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Bio
+                  <span className="text-xs text-gray-500 ml-2">
+                    ({value?.length || 0}/500)
+                  </span>
+                </label>
+                <CustomInput
+                  primary
+                  placeholder="Tell us about yourself..."
+                  leftIcon={<FileText size={18} className="text-gray-400" />}
+                  multiline
+                  onChangeText={onChange}
+                  onBlur={onBlur}
+                  value={value}
+                  error={errors.bio?.message}
                 />
               </div>
             )}
