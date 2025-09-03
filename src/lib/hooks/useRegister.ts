@@ -57,22 +57,23 @@ export const useVerifyEmail = () => {
   });
 };
 
+
+
 export const useLoginUser = () => {
   const router = useRouter();
   const IsLoggedIn = useAuthStore.getState().isLoggedIn;
-  
 
   return useMutation({
     mutationFn: loginUser,
     async onSuccess(data: loginPayload) {
       showSuccessToast("Login successful");
-      
+
       if (data) {
         useAuthStore
           .getState()
-          .login({ token: data?.data?.access_token.token  });
+          .login({ token: data?.data?.access_token?.token || "" });
         IsLoggedIn();
-        // router.push("/(tabs)/homepage");
+        router.push("/dashboard");
         console.log("data000:", data);
       }
     },
