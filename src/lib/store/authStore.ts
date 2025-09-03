@@ -29,8 +29,6 @@ export const useAuthStore = create<AuthState>()(
 
       isLoggedIn: () => !!get().token,
 
-     
-
       login: ({ token, email }) => {
         set({ token, email: email ?? get().email });
         try {
@@ -79,4 +77,3 @@ export function setAccessToken(token: string | null) {
     }
   } catch {}
 }
-
