@@ -2,8 +2,19 @@
 
 import Image from "next/image";
 import React from "react";
-import { BellIcon, GlobeIcon, HomeIcon, MessageIcon, SearchIcon, SettingsSlidersIcon, UsersIcon } from "./Icons";
+import {
+  BellIcon,
+  GlobeIcon,
+  HomeIcon,
+  MessageIcon,
+  SearchIcon,
+  SettingsSlidersIcon,
+  UsersIcon,
+} from "./Icons";
 import profileImg from "@/assets/images/profile.jpg";
+import { useAuthStore } from "@/lib/store/authStore";
+import { useRouter } from "next/navigation";
+import Logo from "@/customComp/Logo";
 
 type NavItem = {
   icon: React.ReactNode;
@@ -17,12 +28,33 @@ const navItems: NavItem[] = [
   { icon: <MessageIcon />, label: "Messages" },
   { icon: <UsersIcon />, label: "Friends", count: "1000+" },
   { icon: <GlobeIcon />, label: "Languages" },
+  { icon: <MessageIcon />, label: "Edit Profile" },
 ];
 
 export const LeftSidebar: React.FC = () => {
+  const router = useRouter();
+
+  const logout = useAuthStore.getState().logout;
+
+  const logoutFn = () => {
+    logout();
+    router.push("/login");
+  };
+
+  const handlePageRouting =(item:string)=>{
+    console.log("item", item);
+    if(item === "Edit Profile"){
+      router.push("/profile/edit-profile")
+    }
+  }
+
   return (
-    <aside className="hidden lg:block lg:w-72 xl:w-80 shrink-0 border-r border-gray-200/70 h-[calc(100vh-56px)] sticky top-14">
+    // <aside className="hidden lg:block lg:w-72 xl:w-80 shrink-0 border-r border-gray-200/70  sticky top-14">
+    <aside className="  flex-1 bg-white">
       <div className="p-5">
+        <div className="mb-6">
+          <Logo height={20} />
+        </div>
         <div className="flex items-center gap-3">
           <div className="h-14 w-14 rounded-full overflow-hidden">
             <Image
@@ -52,6 +84,9 @@ export const LeftSidebar: React.FC = () => {
             <button
               key={item.label}
               className="w-full flex items-center justify-between rounded-lg px-3 py-3 hover:bg-gray-100/70 text-sm"
+              onClick={()=>{
+                handlePageRouting(item.label)
+              }}
             >
               <span className="flex items-center gap-3">
                 <span className="text-green-700">{item.icon}</span>
@@ -76,9 +111,16 @@ export const LeftSidebar: React.FC = () => {
             <span>Faykar Help</span>
             <span className="text-gray-400">›</span>
           </button>
+
+          <button
+            className="w-full flex items-center justify-between rounded-lg px-3 py-2 hover:bg-gray-100/70 text-sm"
+            onClick={logoutFn}
+          >
+            <span>Log out</span>
+            <span className="text-gray-400">›</span>
+          </button>
         </div>
       </div>
     </aside>
   );
 };
-

@@ -4,6 +4,8 @@ import { useAuthStore } from "@/lib/store/authStore";
 // Configure the base URL here or via NEXT_PUBLIC_API_BASE_URL
 const apiBaseUrl = process.env.NEXT_PUBLIC_API_BASE_URL || "";
 
+console.log("apiBaseUrl", apiBaseUrl);
+
 export const http = axios.create({
   baseURL: apiBaseUrl,
   headers: {

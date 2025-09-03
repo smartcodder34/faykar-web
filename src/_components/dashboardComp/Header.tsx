@@ -10,57 +10,53 @@ import {
   CheckCircle,
   User,
 } from "lucide-react";
-import logo from "@/assets/images/logo.png";
+import { useRouter } from "next/navigation";
 
 export const Header: React.FC = () => {
+  const router = useRouter();
   return (
     <header className="sticky top-0 z-40 bg-white border-b border-gray-200/70">
       <div className="mx-auto max-w-[1400px] px-4 sm:px-6">
-        <div className="h-14 flex items-center justify-between">
-          {/* Left side - Logo */}
-          <div className="flex items-center gap-2">
-            <div className="h-8 w-8 overflow-hidden rounded">
-              <Image
-                src={logo}
-                alt="Faykar"
-                className="h-full w-full object-contain"
-              />
-            </div>
-            <span className="hidden sm:block font-semibold tracking-wide">
-              FAYKAR
-            </span>
-          </div>
-
+        <div className="h-14  flex ">
           {/* Center - Navigation Icons */}
-          <div className="flex items-center gap-6">
-            <button
-              className="p-2 rounded-full hover:bg-gray-100 transition-colors"
-              aria-label="Home"
-            >
-              <Home className="h-5 w-5 text-gray-600" />
-            </button>
-            <button
-              className="p-2 rounded-full hover:bg-gray-100 transition-colors"
-              aria-label="Messages"
-            >
-              <MessageCircle className="h-5 w-5 text-gray-600" />
-            </button>
-            <button
-              className="p-2 rounded-full hover:bg-gray-100 transition-colors"
-              aria-label="Search"
-            >
-              <Search className="h-5 w-5 text-gray-600" />
-            </button>
-            <button
-              className="p-2 rounded-full hover:bg-gray-100 transition-colors"
-              aria-label="User"
-            >
-              <User className="h-5 w-5 text-gray-600" />
-            </button>
+          {/* Center - Navigation Icons */}
+          <div className="flex flex-4 items-center justify-center">
+            <div className="flex items-center gap-10">
+              <button
+                className="p-2 rounded-full hover:bg-gray-100 transition-colors"
+                aria-label="Home"
+                onClick={()=>{
+                  router.push("/dashboard")
+                }}
+              >
+                <Home className="h-5 w-5 text-gray-600" />
+              </button>
+              <button
+                className="p-2 rounded-full hover:bg-gray-100 transition-colors"
+                aria-label="Messages"
+              >
+                <MessageCircle className="h-5 w-5 text-gray-600" />
+              </button>
+              <button
+                className="p-2 rounded-full hover:bg-gray-100 transition-colors"
+                aria-label="Search"
+              >
+                <Search className="h-5 w-5 text-gray-600" />
+              </button>
+              <button
+                className="p-2 rounded-full hover:bg-gray-100 transition-colors"
+                aria-label="User"
+                onClick={()=>{
+                  router.push("/profile");
+                }}
+              >
+                <User className="h-5 w-5 text-gray-600" />
+              </button>
+            </div>
           </div>
 
           {/* Right side - Action buttons and profile */}
-          <div className="flex items-center gap-3">
+          <div className="flex flex-1  items-center gap-3">
             <button
               className="p-2 rounded-full hover:bg-gray-100 transition-colors"
               aria-label="Add"
