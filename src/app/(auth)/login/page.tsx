@@ -12,17 +12,25 @@ import { Controller, useForm } from "react-hook-form";
 import { AuthSlider } from "@/customComp/AuthSlider";
 import { useLoginUser } from "@/lib/hooks/useRegister";
 import LoadingOverlay from "@/customComp/LoadingOverlay";
+import Image from "next/image";
+import facebook from "@/assets/images/facebook.png";
+import google from "@/assets/images/google.png";
+import { createAuthClient } from "better-auth/client";
 
 type FormValues = {
   email: string;
   password: string;
 };
 
+
+const authClient = createAuthClient();
 export default function LoginPage() {
   const router = useRouter();
   const [isSecureEntry, setIsSecureEntry] = React.useState(true);
 
   const userLogin = useLoginUser();
+
+  console.log("authClient", authClient);
 
   useEffect(() => {
     if (isLoggedIn()) {
@@ -50,6 +58,15 @@ export default function LoginPage() {
       userLogin.mutate(data);
     }
   };
+
+  const signIn = async () => {
+    const data = await authClient.signIn.social({
+      provider: "google",
+    });
+
+    console.log("data:", data);
+  };
+
 
   return (
     <div className="min-h-screen w-full px-6 py-10 md:px-10 lg:px-16 flex items-center justify-center">
@@ -160,6 +177,32 @@ export default function LoginPage() {
             >
               Create Account
             </button>
+          </div>
+
+          <div className=" flex items-center justify-between w-40 mx-auto my-5">
+            <div
+              onClick={() => {
+                console.log("click");
+              }}
+            >
+              <Image
+                alt="carousel image"
+                src={facebook}
+                className=" object-cover"
+                // width={100}
+                // height={100}
+              />
+            </div>
+
+            <div onClick={signIn}>
+              <Image
+                alt="carousel image"
+                src={google}
+                className=" object-cover"
+                // width={100}
+                // height={100}
+              />
+            </div>
           </div>
         </div>
 
