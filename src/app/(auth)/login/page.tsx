@@ -15,22 +15,26 @@ import LoadingOverlay from "@/customComp/LoadingOverlay";
 import Image from "next/image";
 import facebook from "@/assets/images/facebook.png";
 import google from "@/assets/images/google.png";
-import { createAuthClient } from "better-auth/client";
+
+import { signIn, signOut } from "next-auth/react";
+
+
 
 type FormValues = {
   email: string;
   password: string;
 };
 
-
-const authClient = createAuthClient();
 export default function LoginPage() {
   const router = useRouter();
   const [isSecureEntry, setIsSecureEntry] = React.useState(true);
 
-  const userLogin = useLoginUser();
+  // const {data}= useSession()
+  // const session = data;
 
-  console.log("authClient", authClient);
+  // console.log("session:", session);
+
+  const userLogin = useLoginUser();
 
   useEffect(() => {
     if (isLoggedIn()) {
@@ -54,19 +58,23 @@ export default function LoginPage() {
   const onSubmit = async (data: FormValues) => {
     console.log("login submit", data);
     // Simulate successful login; integrate with real API when ready
-    if(data){
+    if (data) {
       userLogin.mutate(data);
     }
   };
 
-  const signIn = async () => {
-    const data = await authClient.signIn.social({
-      provider: "google",
-    });
+  const handleSignIn = () => {
 
-    console.log("data:", data);
+    console.log("clicked here")
+     
+     signIn("google");
   };
 
+  const handleFacebookSignIn = () => {
+    console.log("clicked here facebook");
+
+    signIn("facebook");
+  };
 
   return (
     <div className="min-h-screen w-full px-6 py-10 md:px-10 lg:px-16 flex items-center justify-center">
@@ -173,18 +181,15 @@ export default function LoginPage() {
             Don&apos;t have an account?
             <button
               className="text-green-700 hover:underline ml-1"
-              onClick={() => router.push("/register")}
+              // onClick={() => router.push("/register")}
+              onClick={()=>signOut()}
             >
               Create Account
             </button>
           </div>
 
           <div className=" flex items-center justify-between w-40 mx-auto my-5">
-            <div
-              onClick={() => {
-                console.log("click");
-              }}
-            >
+            <div onClick={handleFacebookSignIn}>
               <Image
                 alt="carousel image"
                 src={facebook}
@@ -194,7 +199,7 @@ export default function LoginPage() {
               />
             </div>
 
-            <div onClick={signIn}>
+            <div onClick={handleSignIn}>
               <Image
                 alt="carousel image"
                 src={google}

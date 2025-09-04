@@ -15,6 +15,7 @@ import profileImg from "@/assets/images/profile.jpg";
 import { useAuthStore } from "@/lib/store/authStore";
 import { useRouter } from "next/navigation";
 import Logo from "@/customComp/Logo";
+import { signOut } from "next-auth/react";
 
 type NavItem = {
   icon: React.ReactNode;
@@ -38,6 +39,7 @@ export const LeftSidebar: React.FC = () => {
 
   const logoutFn = () => {
     logout();
+    signOut()
     router.push("/login");
   };
 
