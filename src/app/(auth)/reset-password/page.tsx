@@ -6,14 +6,20 @@ import CustomInput from "@/customComp/CustomInput";
 import CustomButton from "@/customComp/CustomButton";
 import Logo from "@/customComp/Logo";
 import React from "react";
+import { useResetPasswordApi } from "@/lib/hooks/useRegister";
+import { useAuthStore } from "@/lib/store/authStore";
 
-type FormValues = { password: string; password_confirmation: string };
+type FormValues = { password: string; password_confirmation: string; otp: string};
 
 export default function ResetPasswordpage() {
   const router = useRouter();
+    const email = useAuthStore.getState().email;
+  
 
   const [isSecureEntry, setIsSecureEntry] = React.useState(true);
-    const [comPassIsSecureEntry, setComPassIsSecureEntry] = React.useState(true);
+  const [comPassIsSecureEntry, setComPassIsSecureEntry] = React.useState(true);
+
+  const resetPasswordData = useResetPasswordApi();
 
   const {
     control,
@@ -25,14 +31,21 @@ export default function ResetPasswordpage() {
     defaultValues: {
       password: "",
       password_confirmation: "",
+      otp:"",
     },
   });
 
   const pwd = watch("password");
 
-
   const onSubmit = async (data: FormValues) => {
     console.log("forgot submit", data);
+    const requestedPayload = {
+      email: email,
+      password: data.password,
+      password_confirmation: data.password_confirmation,
+      otp: data.otp,
+    };
+    resetPasswordData.mutate(requestedPayload);
   };
 
   return (
@@ -100,13 +113,32 @@ export default function ResetPasswordpage() {
             )}
           />
 
+          <Controller
+            control={control}
+            name="otp"
+            rules={{
+              required: "Otp is required",
+            }}
+            render={({ field: { onChange, onBlur, value } }) => (
+              <CustomInput
+                primary
+                // label="Re-type password"
+                placeholder="Enter Your OTP"
+                secureTextEntry={comPassIsSecureEntry}
+                onChangeText={onChange}
+                value={value}
+                error={errors.password_confirmation?.message}
+              />
+            )}
+          />
+
           <div className="mt-4">
             <CustomButton
               // title={isSubmitting ? "Sending..." : "Send Reset Link"}]
               title={"Send Reset Link"}
               primary
-              // loading={isSubmitting}
-              disabled={!isValid}
+              loading={resetPasswordData.isPending}
+              disabled={!isValid || resetPasswordData.isPending}
               onPress={handleSubmit(onSubmit)}
             />
           </div>

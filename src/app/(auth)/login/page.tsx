@@ -3,22 +3,18 @@
 import React, { useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { isLoggedIn } from "@/lib/auth";
-import { useAuthStore } from "@/lib/store/authStore";
-import { showSuccessToast } from "@/lib/toast";
 import CustomInput from "@/customComp/CustomInput";
 import CustomButton from "@/customComp/CustomButton";
 import Logo from "@/customComp/Logo";
 import { Controller, useForm } from "react-hook-form";
 import { AuthSlider } from "@/customComp/AuthSlider";
-import { useLoginUser } from "@/lib/hooks/useRegister";
+import { useLoginSocialUser, useLoginUser } from "@/lib/hooks/useRegister";
 import LoadingOverlay from "@/customComp/LoadingOverlay";
 import Image from "next/image";
 import facebook from "@/assets/images/facebook.png";
 import google from "@/assets/images/google.png";
 
-import { signIn, signOut } from "next-auth/react";
-
-
+import { signIn, signOut, useSession } from "next-auth/react";
 
 type FormValues = {
   email: string;
@@ -28,19 +24,35 @@ type FormValues = {
 export default function LoginPage() {
   const router = useRouter();
   const [isSecureEntry, setIsSecureEntry] = React.useState(true);
+  const [selectedProvider, setSelectedProvider] = React.useState("")
 
-  // const {data}= useSession()
-  // const session = data;
+  const {data, status} = useSession();
+  const session = data;
 
-  // console.log("session:", session);
+  console.log("session:", session);
 
   const userLogin = useLoginUser();
+  const loginSocialDetails = useLoginSocialUser();
 
   useEffect(() => {
     if (isLoggedIn()) {
       router.replace("/dashboard");
     }
   }, [router]);
+
+ useEffect(() => {
+   if (session?.user) {
+     const provider = sessionStorage.getItem("provider") || "";
+     loginSocialDetails.mutate({
+       email: session?.user?.email,
+       provider,
+     });
+    //  sessionStorage.removeItem("provider"); 
+   }
+ }, [session]);
+
+
+  console.log("selectedProvider", selectedProvider);
 
   const {
     control,
@@ -63,23 +75,21 @@ export default function LoginPage() {
     }
   };
 
-  const handleSignIn = () => {
+  
 
-    console.log("clicked here")
-     
-     signIn("google");
+  const handleSignIn = (provider: string) => {
+    console.log(provider, "provider");
+    // store in localStorage/sessionStorage before redirect
+    sessionStorage.setItem("provider", provider);
+    signIn(provider);
   };
 
-  const handleFacebookSignIn = () => {
-    console.log("clicked here facebook");
 
-    signIn("facebook");
-  };
-
+ 
   return (
     <div className="min-h-screen w-full px-6 py-10 md:px-10 lg:px-16 flex items-center justify-center">
       <LoadingOverlay
-        isOpen={userLogin.isPending}
+        isOpen={userLogin.isPending || status === "loading"}
         message="logging in..."
         animationType="pulse"
       />
@@ -181,15 +191,15 @@ export default function LoginPage() {
             Don&apos;t have an account?
             <button
               className="text-green-700 hover:underline ml-1"
-              // onClick={() => router.push("/register")}
-              onClick={()=>signOut()}
+              onClick={() => router.push("/register")}
+              // onClick={() => signOut()}
             >
               Create Account
             </button>
           </div>
 
           <div className=" flex items-center justify-between w-40 mx-auto my-5">
-            <div onClick={handleFacebookSignIn}>
+            <div onClick={() => handleSignIn("facebook")}>
               <Image
                 alt="carousel image"
                 src={facebook}
@@ -199,7 +209,7 @@ export default function LoginPage() {
               />
             </div>
 
-            <div onClick={handleSignIn}>
+            <div onClick={() => handleSignIn("google")}>
               <Image
                 alt="carousel image"
                 src={google}
@@ -216,3 +226,7 @@ export default function LoginPage() {
     </div>
   );
 }
+
+
+
+

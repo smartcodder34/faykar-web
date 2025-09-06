@@ -5,11 +5,16 @@ import { Controller, useForm } from "react-hook-form";
 import CustomInput from "@/customComp/CustomInput";
 import CustomButton from "@/customComp/CustomButton";
 import Logo from "@/customComp/Logo";
+import { useForgotPasswordApi } from "@/lib/hooks/useRegister";
+import { useAuthStore } from "@/lib/store/authStore";
 
 type FormValues = { email: string };
 
 export default function ForgotPage() {
   const router = useRouter();
+  const setAuth = useAuthStore.getState().setAuth;
+
+  const forgotPasswordEmail = useForgotPasswordApi();
 
   const {
     control,
@@ -23,12 +28,10 @@ export default function ForgotPage() {
     },
   });
 
-  const onSubmit = async (data: FormValues) => {
-   
+  const onSubmit = async (data) => {
     console.log("forgot submit", data);
-
-    router.push("/reset-password");
-   
+    setAuth({ email: data.email });
+    forgotPasswordEmail.mutate(data);
   };
 
   return (
@@ -72,10 +75,10 @@ export default function ForgotPage() {
           <div className="mt-4">
             <CustomButton
               // title={isSubmitting ? "Sending..." : "Send Reset Link"}]
-              title={ "Send Reset Link"}
+              title={"Send Reset"}
               primary
-              // loading={isSubmitting}
-              // disabled={!isValid}
+              loading={forgotPasswordEmail.isPending}
+              disabled={!isValid || forgotPasswordEmail.isPending}
               onPress={handleSubmit(onSubmit)}
             />
           </div>

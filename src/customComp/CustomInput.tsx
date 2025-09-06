@@ -74,7 +74,7 @@ const CustomInput = ({
   return (
     <div className="my-2 w-full" style={{ width }}>
       {label && (
-        <label className="mb-1 block text-sm font-medium text-black">
+        <label className="mb-1 block text-sm font-medium text-black ">
           {label}
         </label>
       )}
