@@ -1,5 +1,4 @@
 import { FeedCenter } from "@/_components/dashboardComp/FeedCenter";
-import { DashboardShell } from "../../../_components/dashboardComp/DashboardShell";
 import { Header } from "../../../_components/dashboardComp/Header";
 import { LeftSidebar } from "../../../_components/dashboardComp/LeftSidebar";
 import { RightSidebar } from "../../../_components/dashboardComp/RightSidebar";

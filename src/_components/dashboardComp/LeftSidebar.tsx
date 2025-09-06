@@ -15,7 +15,8 @@ import profileImg from "@/assets/images/profile.jpg";
 import { useAuthStore } from "@/lib/store/authStore";
 import { useRouter } from "next/navigation";
 import Logo from "@/customComp/Logo";
-import { signOut } from "next-auth/react";
+import { signOut, useSession } from "next-auth/react";
+import { useGetUserApi } from "@/lib/hooks/useGetUserApi";
 
 type NavItem = {
   icon: React.ReactNode;
@@ -34,21 +35,35 @@ const navItems: NavItem[] = [
 
 export const LeftSidebar: React.FC = () => {
   const router = useRouter();
+  const getUserData = useGetUserApi();
+
+  //  console.log("getUserData:", getUserData?.data?.data);
 
   const logout = useAuthStore.getState().logout;
 
+  const { data } = useSession();
+  const session = data;
+
+  console.log("session:", session);
+
   const logoutFn = () => {
     logout();
-    signOut()
-    router.push("/login");
+    signOut({ callbackUrl: "/login" });
   };
 
-  const handlePageRouting =(item:string)=>{
+  // const logoutFn = async () => {
+  //   console.log("Hello here");
+  //   logout(); // clear zustand state immediately
+  //   await signOut({ redirect: false }); // don't auto-redirect
+  //   router.push("/login"); // push manually after signout finishes
+  // };
+
+  const handlePageRouting = (item: string) => {
     console.log("item", item);
-    if(item === "Edit Profile"){
-      router.push("/profile/edit-profile")
+    if (item === "Edit Profile") {
+      router.push("/profile/edit-profile");
     }
-  }
+  };
 
   return (
     // <aside className="hidden lg:block lg:w-72 xl:w-80 shrink-0 border-r border-gray-200/70  sticky top-14">
@@ -66,7 +81,7 @@ export const LeftSidebar: React.FC = () => {
             />
           </div>
           <span className=" text-lg font-semibold tracking-wide text-[#2E6939]">
-            Virat Kohli
+            {getUserData?.data?.data?.full_name}
           </span>
         </div>
 
@@ -86,8 +101,8 @@ export const LeftSidebar: React.FC = () => {
             <button
               key={item.label}
               className="w-full flex items-center justify-between rounded-lg px-3 py-3 hover:bg-gray-100/70 text-sm"
-              onClick={()=>{
-                handlePageRouting(item.label)
+              onClick={() => {
+                handlePageRouting(item.label);
               }}
             >
               <span className="flex items-center gap-3">

@@ -42,8 +42,8 @@ const CustomSelect: React.FC<Props> = ({
   const getBgStyles = (): React.CSSProperties => {
     if (primary) {
       return {
-        border: "1px solid #EAEAEA",
-        backgroundColor: "#f8f9fa", // equivalent to onsurface
+        border: "1px solid #99a1af",
+        // backgroundColor: "#f8f9fa", // equivalent to onsurface
       };
     }
     if (whiteBg) {
@@ -60,7 +60,7 @@ const CustomSelect: React.FC<Props> = ({
 
   const selectStyles: React.CSSProperties = {
     position: "relative",
-    height: "40px",
+    height: "45px",
     padding: "12px",
     borderRadius: "16px",
     display: "flex",

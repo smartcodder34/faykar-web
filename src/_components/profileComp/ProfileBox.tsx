@@ -7,18 +7,20 @@
 //     </div>
 //   );
 // }
-
+"use client"
 
 import React from "react";
 import { Settings } from "lucide-react";
 import profile from "@/assets/images/profile.jpg"
 import Image from "next/image";
+import { useGetUserApi } from "@/lib/hooks/useGetUserApi";
 
 export default function ProfileBox() {
+    const getUserData = useGetUserApi();
+  
   return (
     <div className="flex items-center gap-4 rounded-2xl bg-white border border-gray-200/70 shadow-sm p-4 w-full ">
       {/* Profile Image */}
-     
 
       <div className=" w-[150px] h-[150px]">
         <Image
@@ -34,7 +36,7 @@ export default function ProfileBox() {
       <div className="flex flex-col flex-1">
         <div className="flex items-center gap-3">
           <h2 className="font-semibold text-lg text-green-700">
-            Namaha Chandra
+            {getUserData?.data?.data?.full_name}
           </h2>
 
           {/* Buttons */}
