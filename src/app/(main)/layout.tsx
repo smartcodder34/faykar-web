@@ -4,6 +4,8 @@
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { isLoggedIn } from "@/lib/auth";
+import { useLocationAfterLogin } from "@/lib/hooks/useLocationAfterLogin";
+import LocationPermission from "@/customComp/LocationPermission";
 
 
 export default function MainLayout({
@@ -13,6 +15,11 @@ export default function MainLayout({
 }>) {
 
   const router = useRouter();
+  const {
+    showLocationPermission,
+    handleAllowLocation,
+    handleSkipLocation,
+  } = useLocationAfterLogin();
 
   useEffect(() => {
     if (!isLoggedIn()) {
@@ -24,7 +31,17 @@ export default function MainLayout({
     return null;
   }
 
-
-  return <>{children}</>;
+  return (
+    <>
+      {children}
+      {showLocationPermission && (
+        <LocationPermission
+          onLocationDetected={handleAllowLocation}
+          onSkip={handleSkipLocation}
+          showSkip={true}
+        />
+      )}
+    </>
+  );
 }
 

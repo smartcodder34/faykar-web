@@ -1,10 +1,10 @@
 import { Header } from '@/_components/dashboardComp/Header'
 import { LeftSidebar } from '@/_components/dashboardComp/LeftSidebar'
 import { RightSidebar } from '@/_components/dashboardComp/RightSidebar'
-import { ProfileCenter } from '@/_components/profileComp/ProfileCenter'
+import CreateProduct from '@/customComp/dashboard/CreateProduct';
 import React from 'react'
 
-const ProfilePage = () => {
+export default function CreateProductPage() {
   return (
     <div className="min-h-screen bg-gray-100">
       {/* Header */}
@@ -19,7 +19,7 @@ const ProfilePage = () => {
         
         {/* Main Content Area */}
         <div className="flex-1 min-w-0 w-full lg:w-auto">
-          <ProfileCenter />
+          <CreateProduct />
         </div>
         
         {/* Right Sidebar - Hidden on mobile/tablet, visible on xl+ */}
@@ -30,5 +30,3 @@ const ProfilePage = () => {
     </div>
   );
 }
-
-export default ProfilePage

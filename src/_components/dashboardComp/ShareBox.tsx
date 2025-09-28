@@ -5,14 +5,21 @@ import React from "react";
 import { CameraIcon } from "./Icons";
 import story1 from "@/assets/images/image-2.png";
 import story2 from "@/assets/images/image-1.png";
+import { useRouter } from "next/navigation";
 
 export const ShareBox: React.FC = () => {
+    const router = useRouter();
   return (
     <div className="rounded-2xl bg-white border border-gray-200/70 shadow-sm">
       <div className="flex items-center gap-3 p-3">
         <div className="h-9 w-9 rounded-full overflow-hidden bg-gray-200" />
         <div className="flex-1">
-          <div className="bg-green-900/90 text-white text-sm rounded-lg px-4 py-2 flex items-center justify-between">
+          <div
+            className="bg-green-900/90 text-white text-sm rounded-lg px-4 py-2 flex items-center justify-between"
+            onClick={() => {
+              router.push("/dashboard/create-product");
+            }}
+          >
             <span>Share your Product</span>
             <span className="bg-white/15 rounded p-1">
               <CameraIcon className="text-white" />

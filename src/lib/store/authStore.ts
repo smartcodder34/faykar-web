@@ -3,14 +3,26 @@
 import { create } from "zustand";
 import { persist, createJSONStorage } from "zustand/middleware";
 
+export interface LocationData {
+  latitude: number | null;
+  longitude: number | null;
+  accuracy: number | null;
+  timestamp: number | null;
+  address?: string;
+  city?: string;
+  country?: string;
+}
+
 export type AuthState = {
   token: string | null;
   email: string | null;
-  setAuth: (payload: { token?: string | null; email?: string | null }) => void;
+  location: LocationData | null;
+  setAuth: (payload: { token?: string | null; email?: string | null; location?: LocationData | null }) => void;
   clearAuth: () => void;
   isLoggedIn: () => boolean;
-  login: (params: { token: string; email?: string | null }) => void;
+  login: (params: { token: string; email?: string | null; location?: LocationData | null }) => void;
   logout: () => void;
+  setLocation: (location: LocationData) => void;
 };
 
 export const useAuthStore = create<AuthState>()(
@@ -18,19 +30,25 @@ export const useAuthStore = create<AuthState>()(
     (set, get) => ({
       token: null,
       email: null,
+      location: null,
 
-      setAuth: ({ token, email }) =>
+      setAuth: ({ token, email, location }) =>
         set((state) => ({
           token: token !== undefined ? token : state.token,
           email: email !== undefined ? email : state.email,
+          location: location !== undefined ? location : state.location,
         })),
 
-      clearAuth: () => set({ token: null, email: null }),
+      clearAuth: () => set({ token: null, email: null, location: null }),
 
       isLoggedIn: () => !!get().token,
 
-      login: ({ token, email }) => {
-        set({ token, email: email ?? get().email });
+      login: ({ token, email, location }) => {
+        set({ 
+          token, 
+          email: email ?? get().email,
+          location: location ?? get().location
+        });
         try {
           if (typeof window !== "undefined") {
             window.localStorage.setItem("access_token", token);
@@ -39,18 +57,22 @@ export const useAuthStore = create<AuthState>()(
       },
 
       logout: () => {
-        set({ token: null, email: null });
+        set({ token: null, email: null, location: null });
         try {
           if (typeof window !== "undefined") {
             window.localStorage.removeItem("access_token");
           }
         } catch {}
       },
+
+      setLocation: (location) => {
+        set({ location });
+      },
     }),
     {
       name: "auth-store",
       storage: createJSONStorage(() => localStorage),
-      partialize: (state) => ({ token: state.token, email: state.email }),
+      partialize: (state) => ({ token: state.token, email: state.email, location: state.location }),
       onRehydrateStorage: () => (state) => {
         // Keep the http interceptor happy by mirroring token under access_token
         try {

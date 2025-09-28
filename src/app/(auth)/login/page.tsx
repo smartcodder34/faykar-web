@@ -78,7 +78,9 @@ export default function LoginPage() {
   
 
   const handleSignIn = (provider: string) => {
-    console.log(provider, "provider");
+
+    console.log(provider, "providerLogin");
+
     // store in localStorage/sessionStorage before redirect
     sessionStorage.setItem("provider", provider);
     signIn(provider);
