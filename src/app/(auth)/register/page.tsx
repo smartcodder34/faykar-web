@@ -65,7 +65,7 @@ export default function RegisterPage() {
       const provider = sessionStorage.getItem("provider") || "";
       registerSocialDetails.mutate({
         full_name: session?.user?.name,
-        phone_number: "+2348109302223",
+        phone_number: "+2348065443322",
         email: session?.user?.email,
         provider,
       });
@@ -86,7 +86,7 @@ export default function RegisterPage() {
   };
 
   const handleSignIn = (provider: string) => {
-    console.log(provider, "provider");
+    console.log(provider, "providerRegister");
     // store in localStorage/sessionStorage before redirect
     sessionStorage.setItem("provider", provider);
     signIn(provider);
@@ -141,12 +141,12 @@ export default function RegisterPage() {
               rules={{
                 required: "Phone number is required",
                 minLength: {
-                  value: 10,
-                  message: "Phone Number must be 10 digits",
+                  value: 14,
+                  message: "Phone Number must be 14 digits",
                 },
                 maxLength: {
-                  value: 12,
-                  message: "Phone Number must not exceed 12 digits",
+                  value: 14,
+                  message: "Phone Number must not exceed 14 digits",
                 },
               }}
               render={({

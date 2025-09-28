@@ -66,13 +66,10 @@ export const LeftSidebar: React.FC = () => {
   };
 
   return (
-    // <aside className="hidden lg:block lg:w-72 xl:w-80 shrink-0 border-r border-gray-200/70  sticky top-14">
-    <aside className="  flex-1 bg-white">
+    <aside className="h-[calc(100vh-56px)] bg-white border-r border-gray-200/70 overflow-y-auto">
       <div className="p-5">
-        <div className="mb-6">
-          <Logo height={20} />
-        </div>
-        <div className="flex items-center gap-3">
+        {/* User Profile Section */}
+        <div className="flex items-center gap-3 mb-6">
           <div className="h-14 w-14 rounded-full overflow-hidden">
             <Image
               src={profileImg}
@@ -80,12 +77,13 @@ export const LeftSidebar: React.FC = () => {
               className="h-full w-full object-cover"
             />
           </div>
-          <span className=" text-lg font-semibold tracking-wide text-[#2E6939]">
-            {getUserData?.data?.data?.full_name}
+          <span className="text-lg font-semibold tracking-wide text-[#2E6939]">
+            {getUserData?.data?.data?.full_name || "Virat Kohli"}
           </span>
         </div>
 
-        <div className="mt-5">
+        {/* Search Section */}
+        <div className="mb-6">
           <div className="rounded-xl bg-gray-100/70 px-3 py-2 flex items-center gap-2">
             <SearchIcon className="text-gray-500" />
             <input
@@ -96,18 +94,27 @@ export const LeftSidebar: React.FC = () => {
           </div>
         </div>
 
-        <nav className="mt-5 space-y-1">
-          {navItems.map((item) => (
+        {/* Navigation Items */}
+        <nav className="mb-8 space-y-1">
+          {navItems.map((item, index) => (
             <button
               key={item.label}
-              className="w-full flex items-center justify-between rounded-lg px-3 py-3 hover:bg-gray-100/70 text-sm"
+              className={`w-full flex items-center justify-between rounded-lg px-3 py-3 text-sm transition-colors ${
+                index === 0 
+                  ? "bg-green-100 text-green-700 border-l-4 border-green-600" 
+                  : "hover:bg-gray-100/70"
+              }`}
               onClick={() => {
                 handlePageRouting(item.label);
               }}
             >
               <span className="flex items-center gap-3">
-                <span className="text-green-700">{item.icon}</span>
-                <span>{item.label}</span>
+                <span className={index === 0 ? "text-green-700" : "text-gray-600"}>
+                  {item.icon}
+                </span>
+                <span className={index === 0 ? "text-green-700 font-medium" : ""}>
+                  {item.label}
+                </span>
               </span>
               {item.count ? (
                 <span className="text-xs text-gray-500">{item.count}</span>
@@ -116,8 +123,9 @@ export const LeftSidebar: React.FC = () => {
           ))}
         </nav>
 
-        <div className="mt-8 space-y-2">
-          <div className="text-xs font-semibold uppercase tracking-wide text-gray-500">
+        {/* About Section */}
+        <div className="space-y-2">
+          <div className="text-xs font-semibold uppercase tracking-wide text-gray-500 mb-2">
             About
           </div>
           <button className="w-full flex items-center justify-between rounded-lg px-3 py-2 hover:bg-gray-100/70 text-sm">

@@ -29,13 +29,16 @@ export const PostCard: React.FC = () => {
       </div>
 
       <div className="px-4 py-3 flex items-center gap-4 text-gray-600">
-        <button className="flex items-center gap-1 hover:text-green-700">
+        <button className="flex items-center gap-1 hover:text-red-500 transition-colors">
           <HeartIcon />
         </button>
-        <button className="flex items-center gap-1 hover:text-green-700">
+        <button className="flex items-center gap-1 hover:text-blue-500 transition-colors">
           <ChatBubbleIcon />
         </button>
-        <button className="flex items-center gap-1 hover:text-green-700">
+        <button className="flex items-center gap-1 hover:text-green-500 transition-colors">
+          <SendIcon />
+        </button>
+        <button className="flex items-center gap-1 hover:text-yellow-500 transition-colors">
           <BookmarkIcon />
         </button>
         <div className="ml-auto text-[11px] text-gray-500 flex items-center gap-3">
@@ -49,7 +52,7 @@ export const PostCard: React.FC = () => {
         <div className="text-[11px] text-gray-500">Category:</div>
         <div className="text-[11px] text-gray-700">Beef Meat</div>
         <div className="ml-auto">
-          <button className="inline-flex items-center gap-2 rounded-full bg-green-900/90 text-white text-xs px-3 py-2">
+          <button className="inline-flex items-center gap-2 rounded-full bg-green-600 text-white text-xs px-3 py-2 hover:bg-green-700 transition-colors">
             <SendIcon />
             Direct Message
           </button>
@@ -57,6 +60,7 @@ export const PostCard: React.FC = () => {
       </div>
 
       <div className="px-4 pb-4 flex items-center justify-between">
+        <div className="text-blue-600 text-sm cursor-pointer hover:underline">View all 57 comments</div>
         <div className="text-[#1B5E20] text-xl font-semibold">$60</div>
       </div>
     </article>

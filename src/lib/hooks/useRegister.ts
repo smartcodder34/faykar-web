@@ -17,8 +17,9 @@ import {
 import { useRouter } from "next/navigation";
 import { ApiError, toApiError } from "../http";
 import { showErrorToast, showSuccessToast } from "@/lib/toast";
-import { useAuthStore } from "../store/authStore";
+import { useAuthStore, LocationData } from "../store/authStore";
 import { signIn, signOut, useSession } from "next-auth/react";
+import { useGeolocation } from "./useGeolocation";
 
 
 // export function useRegister() {
