@@ -77,8 +77,10 @@ export const LeftSidebar: React.FC = () => {
               className="h-full w-full object-cover"
             />
           </div>
+
           <span className="text-lg font-semibold tracking-wide text-[#2E6939]">
             {getUserData?.data?.data?.full_name || "Virat Kohli"}
+
           </span>
         </div>
 
@@ -99,11 +101,13 @@ export const LeftSidebar: React.FC = () => {
           {navItems.map((item, index) => (
             <button
               key={item.label}
+
               className={`w-full flex items-center justify-between rounded-lg px-3 py-3 text-sm transition-colors ${
                 index === 0 
                   ? "bg-green-100 text-green-700 border-l-4 border-green-600" 
                   : "hover:bg-gray-100/70"
               }`}
+
               onClick={() => {
                 handlePageRouting(item.label);
               }}
