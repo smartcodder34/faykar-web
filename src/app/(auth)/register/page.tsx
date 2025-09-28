@@ -7,9 +7,16 @@ import React from "react";
 import { Controller, useForm } from "react-hook-form";
 import Logo from "@/customComp/Logo";
 import { AuthSlider } from "@/customComp/AuthSlider";
-import { useRegisterUser } from "@/lib/hooks/useRegister";
+import {
+  useRegisterSocialUser,
+  useRegisterUser,
+} from "@/lib/hooks/useRegister";
 import LoadingOverlay from "@/customComp/LoadingOverlay";
 import { useAuthStore } from "@/lib/store/authStore";
+import Image from "next/image";
+import facebook from "@/assets/images/facebook.png";
+import google from "@/assets/images/google.png";
+import { signIn, signOut, useSession } from "next-auth/react";
 
 export default function RegisterPage() {
   const router = useRouter();
@@ -45,7 +52,29 @@ export default function RegisterPage() {
 
   const pwd = watch("password");
 
+  const { data, status } = useSession();
+  const session = data;
+
+
+  console.log("session:", session);
+  
+
+
+  React.useEffect(() => {
+    if (session?.user) {
+      const provider = sessionStorage.getItem("provider") || "";
+      registerSocialDetails.mutate({
+        full_name: session?.user?.name,
+        phone_number: "+2348065443322",
+        email: session?.user?.email,
+        provider,
+      });
+      //  sessionStorage.removeItem("provider");
+    }
+  }, [session]);
+
   const registerUserData = useRegisterUser();
+  const registerSocialDetails = useRegisterSocialUser();
 
   const onSubmit = async (data: FormValues) => {
     // Simulate API call
@@ -56,10 +85,21 @@ export default function RegisterPage() {
     }
   };
 
+  const handleSignIn = (provider: string) => {
+    console.log(provider, "providerRegister");
+    // store in localStorage/sessionStorage before redirect
+    sessionStorage.setItem("provider", provider);
+    signIn(provider);
+  };
+
   return (
     <div className="min-h-screen w-full px-6 py-10 md:px-10 lg:px-16 flex items-center justify-center relative">
       <LoadingOverlay
-        isOpen={registerUserData.isPending}
+        isOpen={
+          registerUserData.isPending ||
+          registerSocialDetails.isPending ||
+          status == "loading"
+        }
         message="Creating your account"
         animationType="pulse"
       />
@@ -101,12 +141,12 @@ export default function RegisterPage() {
               rules={{
                 required: "Phone number is required",
                 minLength: {
-                  value: 10,
-                  message: "Phone Number must be 12 digits",
+                  value: 14,
+                  message: "Phone Number must be 14 digits",
                 },
                 maxLength: {
-                  value: 12,
-                  message: "Phone Number must not exceed 12 digits",
+                  value: 14,
+                  message: "Phone Number must not exceed 14 digits",
                 },
               }}
               render={({
@@ -227,6 +267,27 @@ export default function RegisterPage() {
             >
               Sign In
             </button>
+          </div>
+          <div className=" flex items-center justify-between w-40 mx-auto my-5">
+            <div onClick={() => handleSignIn("facebook")}>
+              <Image
+                alt="carousel image"
+                src={facebook}
+                className=" object-cover"
+                // width={100}
+                // height={100}
+              />
+            </div>
+
+            <div onClick={() => handleSignIn("google")}>
+              <Image
+                alt="carousel image"
+                src={google}
+                className=" object-cover"
+                // width={100}
+                // height={100}
+              />
+            </div>
           </div>
         </div>
 

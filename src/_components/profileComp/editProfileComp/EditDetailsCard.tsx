@@ -6,44 +6,89 @@ import CustomInput from "@/customComp/CustomInput";
 import CustomButton from "@/customComp/CustomButton";
 import { User, Mail, MapPin, FileText } from "lucide-react";
 import CustomSelect from "@/customComp/CustomSelect";
+import { useGetUserApi } from "@/lib/hooks/useGetUserApi";
+import { useEditUser } from "@/lib/hooks/useRegister";
+import LoadingOverlay from "@/customComp/LoadingOverlay";
 
 type EditProfileFormValues = {
-  username: string;
+  full_name: string;
+  phone_number: string;
   email: string;
-  address: string;
+  region: string;
+  bio: string;
 };
 
+interface Item {
+  title: string;
+  value: string;
+  price?: string;
+}
+const sexOptions = [
+  { title: "Male", value: "male" },
+  { title: "Female", value: "female" },
+  { title: "Others", value: "others" },
+];
+
 export default function EditDetailsCard() {
-    const [selectedSex, setSelectedSex] = useState(null);
-    const [sexDropdownOpen, setSexDropdownOpen] = useState(false);
+  const [selectedSex, setSelectedSex] = useState<Item | null>(null);
+  const [sexDropdownOpen, setSexDropdownOpen] = useState(false);
 
+  const getUserData = useGetUserApi();
+  const editUserProfile = useEditUser();
 
-    const sexOptions = [
-      { title: "Male", value: "male" },
-      { title: "Female", value: "female" },
-    ];
+  console.log("selectedSex:", selectedSex);
+
   const {
     control,
     handleSubmit,
+    reset,
     formState: { errors, isValid },
   } = useForm({
     mode: "onChange",
     defaultValues: {
-      username: "Namaha Chandra", // Pre-filled with current user data
-      email: "namaha.chandra@example.com",
-      address: "123 Main Street, City, Country",
-      bio:""
+      full_name: "",
+      phone_number: "",
+      email: "",
+      address: "",
+      bio: "",
+      region: "kwara",
     },
   });
 
-  const onSubmit = async (data: EditProfileFormValues) => {
-    console.log("Update profile data:", data);
-    // Here you would typically call your API to update the profile
-    // Example: updateProfile.mutate(data);
+  React.useEffect(() => {
+    if (getUserData?.data) {
+      const userData = getUserData.data.data.gender;
+
+      reset({
+        full_name: getUserData?.data?.data?.full_name,
+        phone_number: getUserData?.data?.data?.phone_number?.toString() || "",
+        email: getUserData?.data?.data?.email,
+        bio: getUserData?.data?.data?.bio || "",
+        region: getUserData?.data?.data?.region || "",
+      });
+      const matchingGender = sexOptions.find((item) => item.value === userData);
+      setSelectedSex(matchingGender || null);
+    }
+  }, [getUserData?.data, reset]);
+
+  const onSubmit = (data: EditProfileFormValues) => {
+    console.log("Form Data:", data);
+    editUserProfile.mutate({
+      full_name: data.full_name || getUserData?.data?.data?.full_name,
+      email: data.email || getUserData?.data?.data?.email,
+      region: data.region || getUserData?.data?.data?.region,
+      bio: data.bio || getUserData?.data?.data?.bio,
+      gender: selectedSex?.value || "",
+    });
   };
 
   return (
     <article className="rounded-2xl bg-white border border-gray-200/70 shadow-sm overflow-hidden">
+      <LoadingOverlay
+        isOpen={editUserProfile.isPending}
+        message="updating..."
+        animationType="pulse"
+      />
       <div className="p-6">
         {/* Header */}
         <div className="mb-6">
@@ -58,7 +103,7 @@ export default function EditDetailsCard() {
           {/* Username Field */}
           <Controller
             control={control}
-            name="username"
+            name="full_name"
             rules={{
               required: "Username is required",
               minLength: {
@@ -67,20 +112,16 @@ export default function EditDetailsCard() {
               },
             }}
             render={({ field: { onChange, onBlur, value } }) => (
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Username
-                </label>
-                <CustomInput
-                  primary
-                  placeholder="Enter your username"
-                  leftIcon={<User size={18} className="text-gray-400" />}
-                  onChangeText={onChange}
-                  onBlur={onBlur}
-                  value={value}
-                  error={errors.username?.message}
-                />
-              </div>
+              <CustomInput
+                label="full name"
+                primary
+                placeholder="Enter your username"
+                leftIcon={<User size={18} className="text-gray-400" />}
+                onChangeText={onChange}
+                onBlur={onBlur}
+                value={value}
+                error={errors.full_name?.message}
+              />
             )}
           />
 
@@ -96,82 +137,38 @@ export default function EditDetailsCard() {
               },
             }}
             render={({ field: { onChange, onBlur, value } }) => (
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Email Address
-                </label>
-                <CustomInput
-                  primary
-                  placeholder="Enter your email address"
-                  leftIcon={<Mail size={18} className="text-gray-400" />}
-                  onChangeText={onChange}
-                  onBlur={onBlur}
-                  value={value}
-                  error={errors.email?.message}
-                />
-              </div>
+              <CustomInput
+                label=" Email Address"
+                primary
+                placeholder="Enter your email address"
+                leftIcon={<Mail size={18} className="text-gray-400" />}
+                onChangeText={onChange}
+                onBlur={onBlur}
+                value={value}
+                error={errors.email?.message}
+              />
             )}
           />
 
           {/* Address Field */}
           <Controller
             control={control}
-            name="address"
+            name="region"
             rules={{
-              required: "Address is required",
-              minLength: {
-                value: 10,
-                message: "Please provide a complete address",
-              },
+              required: "Region is required",
             }}
             render={({ field: { onChange, onBlur, value } }) => (
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Address
-                </label>
-                <CustomInput
-                  primary
-                  placeholder="Enter your full address"
-                  leftIcon={<MapPin size={18} className="text-gray-400" />}
-                  multiline
-                  onChangeText={onChange}
-                  onBlur={onBlur}
-                  value={value}
-                  error={errors.address?.message}
-                />
-              </div>
-            )}
-          />
-
-          {/* Bio Field */}
-          <Controller
-            control={control}
-            name="bio"
-            rules={{
-              maxLength: {
-                value: 500,
-                message: "Bio must not exceed 500 characters",
-              },
-            }}
-            render={({ field: { onChange, onBlur, value } }) => (
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Bio
-                  <span className="text-xs text-gray-500 ml-2">
-                    ({value?.length || 0}/500)
-                  </span>
-                </label>
-                <CustomInput
-                  primary
-                  placeholder="Tell us about yourself..."
-                  leftIcon={<FileText size={18} className="text-gray-400" />}
-                  multiline
-                  onChangeText={onChange}
-                  onBlur={onBlur}
-                  value={value}
-                  error={errors.bio?.message}
-                />
-              </div>
+              <CustomInput
+                label="Region"
+                primary
+                placeholder="Enter your full address"
+                leftIcon={<MapPin size={18} className="text-gray-400" />}
+                // multiline
+                onChangeText={onChange}
+                onBlur={onBlur}
+                value={value}
+                error={errors.region?.message}
+              />
             )}
           />
 
@@ -186,12 +183,39 @@ export default function EditDetailsCard() {
             primary={true}
           />
 
+          {/* Bio Field */}
+          <Controller
+            control={control}
+            name="bio"
+            rules={{
+              required: "Bio is required",
+              // maxLength: {
+              //   value: 500,
+              //   message: "Bio must not exceed 500 characters",
+              // },
+            }}
+            render={({ field: { onChange, onBlur, value } }) => (
+              <CustomInput
+                label="Bio"
+                primary
+                placeholder="Tell us about yourself..."
+                leftIcon={<FileText size={18} className="text-gray-400" />}
+                // multiline
+                onChangeText={onChange}
+                onBlur={onBlur}
+                value={value}
+                error={errors.bio?.message}
+              />
+            )}
+          />
+
           {/* Update Button */}
           <div className="pt-4">
             <CustomButton
               title="Update Profile"
               primary
               disabled={!isValid}
+              loading={editUserProfile.isPending}
               onPress={handleSubmit(onSubmit)}
             />
           </div>

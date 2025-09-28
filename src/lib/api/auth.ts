@@ -13,8 +13,21 @@ export type verifyPayload = {
   otp: string;
 };
 export type loginPayload = {
-  email: string;
-  password: string;
+  email?: string;
+  password?: string;
+ 
+};
+
+export type SocialRegisterPayload = {
+  full_name: string | null;
+  email: string | null; 
+  phone_number: string;
+  provider: string;
+};
+
+export type SocialloginPayload = {
+  email: string| null;
+  provider: string;
 };
 
 export const registerUser = async (payload: RegisterPayload)=> {
@@ -42,6 +55,69 @@ export const loginUser = async (data: loginPayload) => {
     return res.data;
   } catch (error) {
     console.error("authenticate User", error);
+    throw error;
+  }
+};
+
+export const forgotPasswordApi = async (data:string) => {
+  try {
+    const res = await http.post(`/auth/forgot-password`, data);
+    return res.data;
+  } catch (error) {
+    console.error("fogot PasswordApi", error);
+    throw error;
+  }
+};
+
+export const resetPasswordApi = async (data: string) => {
+  try {
+    const res = await http.post(`/auth/reset-password`, data);
+    return res.data;
+  } catch (error) {
+    console.error("fogot PasswordApi", error);
+    throw error;
+  }
+};
+
+export const EditUserDetails = async (data) => {
+  try {
+    const res = await http.put(`/profile/update`, data);
+    return res.data;
+  } catch (error) {
+    console.error("EditUserDetails:", error);
+    throw error;
+  }
+};
+
+export const getProfile = async (data: any) => {
+  try {
+    const res = await http.get(`/profile`, data);
+    return res.data;
+  } catch (error) {
+    console.error("getUserApi:", error);
+    throw error;
+  }
+};
+
+
+
+//social media
+
+export const registerSocialUser = async (payload: SocialRegisterPayload) => {
+  try {
+    const { data } = await http.post("/auth/social-register", payload);
+    return data;
+  } catch (err) {
+    throw toApiError(err) as ApiError;
+  }
+};
+
+export const loginSocialUser = async (data: SocialloginPayload) => {
+  try {
+    const res = await http.post(`/auth/social-login`, data);
+    return res.data;
+  } catch (error) {
+    console.error("Social authenticate User", error);
     throw error;
   }
 };

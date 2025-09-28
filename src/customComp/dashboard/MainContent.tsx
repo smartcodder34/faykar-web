@@ -1,8 +1,10 @@
 'use client';
 
+import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 
 const MainContent = () => {
+  const router = useRouter();
   const [productImages] = useState([
     { id: 1, name: 'Abdul', isAdd: true },
     { id: 2, name: 'Meru', image: '👕' },
@@ -20,7 +22,9 @@ const MainContent = () => {
             <span className="text-gray-600 font-semibold">VK</span>
           </div>
           <div className="flex-1">
-            <button className="w-full bg-green-500 text-white py-4 px-6 rounded-xl text-left hover:bg-green-600 transition-colors flex items-center justify-between">
+            <button className="w-full bg-green-500 text-white py-4 px-6 rounded-xl text-left hover:bg-green-600 transition-colors flex items-center justify-between" onClick={()=>{
+              router.push("/create-product");
+            }}>
               <span className="font-medium">Share your Product</span>
               <span className="text-2xl">📷</span>
             </button>
