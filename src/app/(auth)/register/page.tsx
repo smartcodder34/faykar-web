@@ -65,7 +65,7 @@ export default function RegisterPage() {
       const provider = sessionStorage.getItem("provider") || "";
       registerSocialDetails.mutate({
         full_name: session?.user?.name,
-        phone_number: "+2348065443322",
+        phone_number: "+2348065443333",
         email: session?.user?.email,
         provider,
       });

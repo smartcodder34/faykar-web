@@ -5,9 +5,48 @@ import { Header } from "../../../_components/dashboardComp/Header";
 import { LeftSidebar } from "../../../_components/dashboardComp/LeftSidebar";
 import { RightSidebar } from "../../../_components/dashboardComp/RightSidebar";
 import { useAuthStore } from "@/lib/store/authStore";
+import { useGeolocated } from "react-geolocated";
+import axios from "axios";
+import React from "react";
+
 
 export default function DashboardPage() {
   const { location } = useAuthStore();
+  const setLocation = useAuthStore((state) => state.setLocation); 
+
+
+  // console.log(location, "location2000");
+
+  const reserveGeo = async () => {
+    try {
+      const res = await axios.get(
+        `https://maps.googleapis.com/maps/api/geocode/json?latlng=${location?.latitude},${location?.longitude}&key=${process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY}`
+      );
+      const response = res.data;
+      if (response.results && response.results.length > 0) {
+        // Assuming you want the first result's formatted address
+        const formattedAddress = response.results[0].formatted_address;
+        return formattedAddress;
+      } else {
+        console.error("No results found.");
+      }
+    } catch (error) {
+      throw error;
+    }
+  };
+
+
+  React.useEffect(() => {
+    const fetchAddress = async () => {
+      if (location && (!location.address || location.address === "")) {
+        const address = await reserveGeo();
+        setLocation({ ...location, address });
+      }
+    };
+    fetchAddress();
+  }, [location]);
+
+
 
   return (
     <div className="min-h-screen bg-gray-100">

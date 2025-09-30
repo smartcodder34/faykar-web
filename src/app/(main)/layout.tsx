@@ -42,6 +42,22 @@ export default function MainLayout({
         />
       )}
     </>
+
+    // <div className="relative min-h-screen">
+    //   {/* Main Content */}
+    //   <div className={showLocationPermission ? "filter blur-sm" : ""}>
+    //     {children}
+    //   </div>
+
+    //   {/* Location Permission Overlay */}
+    //   {showLocationPermission && (
+    //     <LocationPermission
+    //       onLocationDetected={handleAllowLocation}
+    //       onSkip={handleSkipLocation}
+    //       showSkip={true}
+    //     />
+    //   )}
+    // </div>
   );
 }
 

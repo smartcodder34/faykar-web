@@ -44,7 +44,7 @@ export const subProductCategories = async (data:any) => {
 
 export const getProducts = async () => {
   try {
-    const res = await http.get(`/product/customers/product`);
+    const res = await http.get(`/product/all/products`);
     return res.data;
   } catch (error) {
     console.error("get product", error);
@@ -52,7 +52,29 @@ export const getProducts = async () => {
   }
 };
 
-export const likeProduct = async (data:any) => {
+export const viewProduct = async (dataId:string) => {
+  console.log("postId in api2000:", dataId);
+  try {
+    const res = await http.get(`/product/${dataId}`);
+    return res.data;
+  } catch (error) {
+    console.error("viewProduct ", error);
+    throw error;
+  }
+};
+
+export const getUserProducts = async () => {
+  try {
+    const res = await http.get(`/product/customers/product`);
+    return res.data;
+  } catch (error) {
+    console.error("get getUserProducts", error);
+    throw error;
+  }
+};
+
+export const likeProduct = async (data:string) => {
+  console.log("postId in api:", data);
   try {
     const res = await http.get(`/product/${data}/like`);
     return res.data;

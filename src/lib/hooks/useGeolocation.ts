@@ -1,6 +1,8 @@
 "use client";
 
 import { useState, useEffect, useCallback } from 'react';
+import { useGeolocated } from "react-geolocated";
+
 
 export interface LocationData {
   latitude: number | null;
@@ -195,3 +197,5 @@ export function useGeolocation(options: UseGeolocationOptions = {}): UseGeolocat
     getAddressFromCoords,
   };
 }
+
+
