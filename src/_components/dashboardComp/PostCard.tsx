@@ -9,8 +9,6 @@ import {
   MapPinIcon,
   SendIcon,
 } from "./Icons";
-import img1 from "@/assets/images/image-1.png";
-import img2 from "@/assets/images/image-2.png";
 import {
   useGetProducts,
   useLikeProducts,
@@ -19,14 +17,48 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import LoadingOverlay from "@/customComp/LoadingOverlay";
 import { getInitials } from "@/utils/getInitials";
 import { useLikeProductMutation } from "@/lib/api/productsApi/productMutation";
+import { useRouter } from "next/navigation";
+import useGetAllMessage from "@/lib/store/chatStore";
+import { useGetUserApi } from "@/lib/hooks/useGetUserApi";
 
 export const PostCard: React.FC = () => {
+  const router = useRouter();
   const getAllProducts = useGetProducts();
   const allProducts = getAllProducts?.data?.data?.products || [];
   const likeProduct = useLikeProductMutation();
 
+  const setChatMessages = useGetAllMessage((state) => state.setChatMessages);
+  const chatMessages = useGetAllMessage((state) => state.chatMessages);
+
+  const getUserData = useGetUserApi();
+  const currentUserId = getUserData.data?.data?.id;
+
   const handleLikeProduct = (productId: string) => {
     likeProduct.mutate(productId);
+  };
+
+  const handleViewProduct = (productId: string) => {
+    router.push(`/dashboard/comments/${productId}`);
+  };
+
+  const handleOpenChatRoom = (product: any) => {
+    router.push(`/message/chat-room`);
+
+    const currentUserName = getUserData?.data?.data?.full_name || "Unknown";
+    const sellerName = product.seller?.full_name || "Unknown";
+    const sellerId = product.seller?.id;
+
+    // Structure the data properly for the chat store
+    setChatMessages({
+      otherUserId: sellerId,
+      seller: {
+        id: sellerId,
+        full_name: sellerName,
+      },
+      name: sellerName,
+      currentUserName, // Pass current user's name
+      currentUserId,   // Pass current user's ID
+    });
   };
 
   return (
@@ -54,7 +86,7 @@ export const PostCard: React.FC = () => {
                   />
                 </div> */}
                 <div className="h-10 w-10 rounded-full bg-gray-200 flex items-center justify-center font-bold ">
-                  {getInitials(item.seller?.full_name)}
+                  {getInitials(item?.seller?.full_name)}
                 </div>
                 <div className="flex-1">
                   <div className="text-sm font-semibold">
@@ -107,10 +139,14 @@ export const PostCard: React.FC = () => {
                   <HeartIcon />
                 ) : (
                   <HeartIcon className="text-red-500 fill-red-500" />
-                )}
+                )}{" "}
+                {item?.product_like}
               </button>
-              <button className="flex items-center gap-1 hover:text-blue-500 transition-colors">
-                <ChatBubbleIcon />
+              <button
+                className="flex items-center gap-1 hover:text-blue-500 transition-colors"
+                onClick={() => handleViewProduct(item.id)}
+              >
+                <ChatBubbleIcon /> {item?.comments_count}
               </button>
               <button className="flex items-center gap-1 hover:text-green-500 transition-colors">
                 <SendIcon />
@@ -130,19 +166,27 @@ export const PostCard: React.FC = () => {
               <div className="text-[11px] text-gray-700">
                 {item.category.name}
               </div>
-              <div className="ml-auto">
-                <button className="inline-flex items-center gap-2 rounded-full bg-green-600 text-white text-xs px-3 py-2 hover:bg-green-700 transition-colors">
-                  <SendIcon />
-                  Direct Message
-                </button>
-              </div>
+
+              {item.seller?.id === currentUserId ? null : (
+                <div className="ml-auto">
+                  <button
+                    className="inline-flex items-center gap-2 rounded-full bg-green-600 text-white text-xs px-3 py-2 hover:bg-green-700 transition-colors"
+                    onClick={() => handleOpenChatRoom(item)}
+                  >
+                    <SendIcon />
+                    Direct Message
+                  </button>
+                </div>
+              )}
             </div>
 
             <div className="px-4 pb-4 flex items-center justify-between">
-              <div className="text-blue-600 text-sm cursor-pointer hover:underline">
+              {/* <div className="text-blue-600 text-sm cursor-pointer hover:underline">
                 View all 57 comments
+              </div> */}
+              <div className="text-[#1B5E20] text-xl font-semibold">
+                ${item.amount}
               </div>
-              <div className="text-[#1B5E20] text-xl font-semibold">$60</div>
             </div>
           </article>
         );

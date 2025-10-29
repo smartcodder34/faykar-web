@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
-import { getProducts, getUserProducts, likeProduct, productCategories, subProductCategories, viewProduct } from ".";
+import { getProductComments, getProducts, getUserProducts, likeProduct, productCategories, subProductCategories, viewProduct } from ".";
 
 export const useProductCategories = ()=>{
   return useQuery({
@@ -47,3 +47,13 @@ export const useLikeProducts = (postId:string) => {
     queryFn: () => likeProduct(postId),
   });
 };
+
+export const useGetProductComments = (postId: string) => {
+  return useQuery({
+    queryKey: ["get-products-comments", postId],
+    queryFn: () => getProductComments(postId),
+  });
+};
+
+
+

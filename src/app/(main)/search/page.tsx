@@ -1,14 +1,11 @@
-"use client"
-import { Header } from '@/_components/dashboardComp/Header'
+ "use client";
+ import { Header } from '@/_components/dashboardComp/Header'
 import { LeftSidebar } from '@/_components/dashboardComp/LeftSidebar'
 import { RightSidebar } from '@/_components/dashboardComp/RightSidebar'
-import ViewProfileComp from '@/_components/profileComp/viewProfileComp/ViewProfileComp';
+import { SearchCenter } from '@/_components/searchComp/SearchCenter';
 import React from 'react'
 
-export default function ViewProfile({params}:any) {
-  console.log(params, "params2000");
-  const postId = params?.postId;
-  console.log(postId, "postId23333300");
+const ProfilePage = () => {
   return (
     <div className="min-h-screen bg-gray-100">
       {/* Header */}
@@ -23,7 +20,7 @@ export default function ViewProfile({params}:any) {
         
         {/* Main Content Area */}
         <div className="flex-1 min-w-0 w-full lg:w-auto">
-          <ViewProfileComp />
+          <SearchCenter />
         </div>
         
         {/* Right Sidebar - Hidden on mobile/tablet, visible on xl+ */}
@@ -34,3 +31,5 @@ export default function ViewProfile({params}:any) {
     </div>
   );
 }
+
+export default ProfilePage

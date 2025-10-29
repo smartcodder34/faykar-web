@@ -1,5 +1,5 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { createProduct, likeProduct } from ".";
+import { commentOnProduct, createProduct, likeProduct } from ".";
 import { useRouter } from "next/navigation";
 
 export const useCreateProduct = () => {
@@ -32,5 +32,23 @@ export const useLikeProductMutation = () => {
       console.error("Failed to like product:", error);
       // Optionally show error message to user
     },
+  });
+};
+
+
+export const useCommentOnProduct = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: commentOnProduct,
+    onSuccess(data: any) {
+      // showSuccessToast({
+      //   message: data.message,
+      // });
+
+     
+      queryClient.invalidateQueries({ queryKey: ["get-products"] });
+      queryClient.invalidateQueries({ queryKey: ["get-products-comments"] });
+    },
+    onError(error: any) {},
   });
 };

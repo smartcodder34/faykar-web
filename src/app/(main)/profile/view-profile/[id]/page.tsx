@@ -11,7 +11,7 @@ import React from "react";
 export default function ViewProfile() {
   const params = useParams();
   const itemId = typeof params.id === "string" ? params.id : "";
-  console.log(itemId, "itemId1234");
+  
   const viewUserProduct = useViewProduct(itemId);
 
   console.log(viewUserProduct, "viewUserProductBB");
