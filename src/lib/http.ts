@@ -44,10 +44,10 @@ http.interceptors.response.use(
     // Centralize error handling; in real apps you might refresh token here
     const status = error.response?.status;
     if (status === 401) {
-      // Optionally, redirect to login or clear token
       try {
-        if (typeof window !== "undefined") {
-          window.localStorage.removeItem("access_token");
+        useAuthStore.getState().logout();
+        if (typeof window !== "undefined" && window.location.pathname !== "/login") {
+          window.location.assign("/login");
         }
       } catch {}
     }

@@ -48,13 +48,13 @@ export default function ProfileBox() {
         {/* Stats */}
         <div className="flex gap-6 mt-2 text-sm text-gray-600">
           <span>
-            <strong className="text-gray-900">100</strong> posts
+            <strong className="text-gray-900">0</strong> posts
           </span>
           <span>
-            <strong className="text-gray-900">4M</strong> followers
+            <strong className="text-gray-900">0</strong> followers
           </span>
           <span>
-            <strong className="text-gray-900">454</strong> following
+            <strong className="text-gray-900">0</strong> following
           </span>
         </div>
       </div>
