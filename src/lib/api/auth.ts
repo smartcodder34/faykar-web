@@ -89,9 +89,9 @@ export const EditUserDetails = async (data) => {
   }
 };
 
-export const getProfile = async (data: any) => {
+export const getProfile = async () => {
   try {
-    const res = await http.get(`/profile`, data);
+    const res = await http.get(`/profile`,);
     return res.data;
   } catch (error) {
     console.error("getUserApi:", error);

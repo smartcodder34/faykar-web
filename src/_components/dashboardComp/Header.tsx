@@ -55,12 +55,18 @@ export const Header: React.FC = () => {
               <button
                 className="flex flex-col items-center gap-1 p-2 hover:bg-gray-100 transition-colors"
                 aria-label="Messages"
+                onClick={() => {
+                  router.push("/message");
+                }}
               >
                 <MessageCircle className="h-5 w-5 text-gray-600" />
               </button>
               <button
                 className="flex flex-col items-center gap-1 p-2 hover:bg-gray-100 transition-colors"
                 aria-label="Search"
+                onClick={() => {
+                  router.push("/search");
+                }}
               >
                 <Search className="h-5 w-5 text-gray-600" />
               </button>
@@ -112,7 +118,7 @@ export const Header: React.FC = () => {
       {/* Mobile Menu Overlay */}
       {isMobileMenuOpen && (
         <div className="fixed inset-0 z-50 lg:hidden">
-          <div 
+          <div
             className="fixed inset-0 bg-black bg-opacity-50"
             onClick={() => setIsMobileMenuOpen(false)}
           />
@@ -141,15 +147,11 @@ export const Header: React.FC = () => {
                   <Home className="h-5 w-5 text-green-600" />
                   <span className="text-green-600 font-medium">Home</span>
                 </button>
-                <button
-                  className="w-full flex items-center gap-3 p-3 rounded-lg hover:bg-gray-100 transition-colors text-left"
-                >
+                <button className="w-full flex items-center gap-3 p-3 rounded-lg hover:bg-gray-100 transition-colors text-left">
                   <MessageCircle className="h-5 w-5 text-gray-600" />
                   <span>Messages</span>
                 </button>
-                <button
-                  className="w-full flex items-center gap-3 p-3 rounded-lg hover:bg-gray-100 transition-colors text-left"
-                >
+                <button className="w-full flex items-center gap-3 p-3 rounded-lg hover:bg-gray-100 transition-colors text-left">
                   <Search className="h-5 w-5 text-gray-600" />
                   <span>Search</span>
                 </button>
@@ -163,9 +165,7 @@ export const Header: React.FC = () => {
                   <User className="h-5 w-5 text-gray-600" />
                   <span>Profile</span>
                 </button>
-                <button
-                  className="w-full flex items-center gap-3 p-3 rounded-lg hover:bg-gray-100 transition-colors text-left"
-                >
+                <button className="w-full flex items-center gap-3 p-3 rounded-lg hover:bg-gray-100 transition-colors text-left">
                   <Plus className="h-5 w-5 text-gray-600" />
                   <span>Add</span>
                 </button>

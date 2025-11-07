@@ -136,7 +136,7 @@ const CustomSelect: React.FC<Props> = ({
 
       {openDropDown && (
         <div style={dropdownStyles}>
-          {dataItem.map((item: Item) => (
+          {dataItem?.map((item: Item) => (
             <div
               key={item.value}
               style={itemStyles}

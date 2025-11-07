@@ -1,10 +1,10 @@
-
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { createProduct } from ".";
-
+import { commentOnProduct, createProduct, likeProduct } from ".";
+import { useRouter } from "next/navigation";
 
 export const useCreateProduct = () => {
   const queryClient = useQueryClient();
+  const router = useRouter();
   return useMutation({
     mutationFn: createProduct,
     onSuccess(data: any) {
@@ -12,10 +12,43 @@ export const useCreateProduct = () => {
       //   message: data.message,
       // });
 
-      // router.back();
-    //   queryClient.invalidateQueries({ queryKey: ["get-profile"] });
+      router.back();
+      queryClient.invalidateQueries({ queryKey: ["get-products"] });
+      queryClient.invalidateQueries({ queryKey: ["get-user-products"] });
     },
-    onError(error: any) {
+    onError(error: any) {},
+  });
+};
+
+export const useLikeProductMutation = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: (productId: string) => likeProduct(productId),
+    onSuccess: () => {
+      // Invalidate and refetch products after successful like
+      queryClient.invalidateQueries({ queryKey: ["get-products"] });
     },
+    onError: (error) => {
+      console.error("Failed to like product:", error);
+      // Optionally show error message to user
+    },
+  });
+};
+
+
+export const useCommentOnProduct = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: commentOnProduct,
+    onSuccess(data: any) {
+      // showSuccessToast({
+      //   message: data.message,
+      // });
+
+     
+      queryClient.invalidateQueries({ queryKey: ["get-products"] });
+      queryClient.invalidateQueries({ queryKey: ["get-products-comments"] });
+    },
+    onError(error: any) {},
   });
 };

@@ -17,6 +17,7 @@ import { useRouter } from "next/navigation";
 import Logo from "@/customComp/Logo";
 import { signOut, useSession } from "next-auth/react";
 import { useGetUserApi } from "@/lib/hooks/useGetUserApi";
+import { getInitials } from "@/utils/getInitials";
 
 type NavItem = {
   icon: React.ReactNode;
@@ -33,6 +34,8 @@ const navItems: NavItem[] = [
   { icon: <MessageIcon />, label: "Edit Profile" },
 ];
 
+
+
 export const LeftSidebar: React.FC = () => {
   const router = useRouter();
   const getUserData = useGetUserApi();
@@ -46,6 +49,22 @@ export const LeftSidebar: React.FC = () => {
 
   console.log("session:", session);
 
+  const handlePageRouting = (item: string) => {
+    switch (item) {
+      case "Home":
+        router.push("/");
+        break;
+      case "Edit Profile":
+        router.push("/profile/edit-profile");
+        break;
+      case "Messages":
+       router.push("/message");
+        break;
+      default:
+        router.push("/");
+    }
+  };
+
   const logoutFn = () => {
     logout();
     signOut({ callbackUrl: "/login" });
@@ -58,24 +77,30 @@ export const LeftSidebar: React.FC = () => {
   //   router.push("/login"); // push manually after signout finishes
   // };
 
-  const handlePageRouting = (item: string) => {
-    console.log("item", item);
-    if (item === "Edit Profile") {
-      router.push("/profile/edit-profile");
-    }
-  };
+  
 
   return (
     <aside className="h-[calc(100vh-56px)] bg-white border-r border-gray-200/70 overflow-y-auto">
       <div className="p-5">
         {/* User Profile Section */}
         <div className="flex items-center gap-3 mb-6">
-          <div className="h-14 w-14 rounded-full overflow-hidden">
+          {/* <div className="h-14 w-14 rounded-full overflow-hidden">
             <Image
               src={profileImg}
               alt="logo"
               className="h-full w-full object-cover"
             />
+          </div> */}
+
+          <div className=" w-[100px] h-[100px] items-center justify-center flex text-3xl font-semibold bg-gray-200 text-gray-600 rounded-full overflow-hidden">
+            {/* <Image
+                    src={profile}
+                    alt="image"
+                    width={100}
+                    height={100}
+                    className="object-cover h-full w-full rounded-full "
+                  /> */}
+            {getInitials(getUserData?.data?.data?.full_name)}
           </div>
 
           <span className="text-lg font-semibold tracking-wide text-[#2E6939]">
@@ -83,10 +108,14 @@ export const LeftSidebar: React.FC = () => {
 
           </span>
         </div>
-
         {/* Search Section */}
         <div className="mb-6">
-          <div className="rounded-xl bg-gray-100/70 px-3 py-2 flex items-center gap-2">
+          <div
+            className="rounded-xl bg-gray-100/70 px-3 py-2 flex items-center gap-2"
+            onClick={() => {
+              router.push("/search");
+            }}
+          >
             <SearchIcon className="text-gray-500" />
             <input
               placeholder="Search"
@@ -95,8 +124,8 @@ export const LeftSidebar: React.FC = () => {
             <SettingsSlidersIcon className="text-gray-400" />
           </div>
         </div>
-
         {/* Navigation Items */}
+        
         <nav className="mb-8 space-y-1">
           {navItems.map((item, index) => (
             <button
@@ -119,14 +148,13 @@ export const LeftSidebar: React.FC = () => {
                 <span className={index === 0 ? "text-green-700 font-medium" : ""}>
                   {item.label}
                 </span>
-              </span>
-              {item.count ? (
-                <span className="text-xs text-gray-500">{item.count}</span>
-              ) : null}
-            </button>
-          ))}
+                {item.count ? (
+                  <span className="text-xs text-gray-500">{item.count}</span>
+                ) : null}
+              </button>
+            );
+          })}
         </nav>
-
         {/* About Section */}
         <div className="space-y-2">
           <div className="text-xs font-semibold uppercase tracking-wide text-gray-500 mb-2">

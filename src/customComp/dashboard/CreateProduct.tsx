@@ -1,15 +1,19 @@
 "use client";
 
-import React, { useState } from 'react';
-import { useForm, Controller } from 'react-hook-form';
-import { Plus, Upload } from 'lucide-react';
-import CustomInput from '@/customComp/CustomInput';
-import CustomSelect from '@/customComp/CustomSelect';
-import CustomButton from '@/customComp/CustomButton';
-import LoadingOverlay from '@/customComp/LoadingOverlay';
-import ImageUploadComponent from '@/_components/productsComp/createProductComp/ImageUploadComponent';
-import { useProductCategories, useSubProductCategories } from '@/lib/api/productsApi/productQuery';
-import { useCreateProduct } from '@/lib/api/productsApi/productMutation';
+import React, { useState } from "react";
+import { useForm, Controller } from "react-hook-form";
+import { Plus, Upload } from "lucide-react";
+import CustomInput from "@/customComp/CustomInput";
+import CustomSelect from "@/customComp/CustomSelect";
+import CustomButton from "@/customComp/CustomButton";
+import LoadingOverlay from "@/customComp/LoadingOverlay";
+import ImageUploadComponent from "@/_components/productsComp/createProductComp/ImageUploadComponent";
+import {
+  useProductCategories,
+  useSubProductCategories,
+} from "@/lib/api/productsApi/productQuery";
+import { useCreateProduct } from "@/lib/api/productsApi/productMutation";
+import { useAuthStore } from "@/lib/store/authStore";
 
 interface Item {
   title: string;
@@ -17,30 +21,14 @@ interface Item {
 }
 
 interface CreateProductFormValues {
+  title: string;
   images: string;
   description: string;
   mainCategory: string;
   subCategory: string;
   deliveryAvailable: string;
-  price: string;
+  amount: string;
 }
-
-const mainCategories: Item[] = [
-  { title: "SEA FOOD", value: "sea_food" },
-  { title: "MEAT", value: "meat" },
-  { title: "VEGETABLES", value: "vegetables" },
-  { title: "FRUITS", value: "fruits" },
-  { title: "DAIRY", value: "dairy" },
-  { title: "GRAINS", value: "grains" },
-];
-
-const subCategories: Item[] = [
-  { title: "Fresh Fish", value: "fresh_fish" },
-  { title: "Frozen Fish", value: "frozen_fish" },
-  { title: "Shellfish", value: "shellfish" },
-  { title: "Crab", value: "crab" },
-  { title: "Lobster", value: "lobster" },
-];
 
 const CreateProduct = () => {
   const [selectedMainCategory, setSelectedMainCategory] = useState<Item | null>(
@@ -51,13 +39,11 @@ const CreateProduct = () => {
   );
   const [mainCategoryOpen, setMainCategoryOpen] = useState(false);
   const [subCategoryOpen, setSubCategoryOpen] = useState(false);
-  const [deliveryAvailable, setDeliveryAvailable] = useState<string>("yes");
+  const [deliveryAvailable, setDeliveryAvailable] = useState<string>("1");
   const [isLoading, setIsLoading] = useState(false);
+  const [uploadData, setUploadData] = useState([null, null, null]); // 3 slots for files
 
-  //upload image
-  const [imageSelected, setImageSelected] = React.useState<string | null>(null);
-  const [uploadData, setUploadData] = React.useState(Array(4).fill(null));
-  const [currentIndex, setCurrentIndex] = React.useState<number | any>();
+  const { location } = useAuthStore();
 
   const {
     control,
@@ -66,12 +52,13 @@ const CreateProduct = () => {
   } = useForm<CreateProductFormValues>({
     mode: "onChange",
     defaultValues: {
+      title: "",
       images: "",
       description: "",
       mainCategory: "",
       subCategory: "",
       deliveryAvailable: "yes",
-      price: "",
+      amount: "",
     },
   });
 
@@ -100,29 +87,65 @@ const CreateProduct = () => {
       };
     });
 
-    console.log("Selected Main Category:", selectedMainCategory);
-    // console.log("Selected Sub Category:", selectedSubCategory);
-    // console.log("Delivery Available:", deliveryAvailable);
-    console.log("Is Form newProductCategory:", newProductCategory);
-    console.log("Is Form newSubProductCategory:", newSubProductCategory);
+  console.log("Selected Main Category:", selectedMainCategory);
+  // console.log("Selected Sub Category:", selectedSubCategory);
+  // console.log("Delivery Available:", deliveryAvailable);
+  console.log("Is Form newProductCategory:", newProductCategory);
+  console.log("Is Form newSubProductCategory:", newSubProductCategory);
+  console.log("Is location:", location);
 
   //form submit
 
   const onSubmit = async (data: CreateProductFormValues) => {
+    // e.preventDefault();
     setIsLoading(true);
     console.log("Form Data:", {
       ...data,
       mainCategory: selectedMainCategory?.value,
       subCategory: selectedSubCategory?.value,
       deliveryAvailable,
+      location: location?.address,
+      latitude: location?.latitude,
+      longitude: location?.longitude,
     });
 
-    // Simulate API call
-    setTimeout(() => {
-      setIsLoading(false);
-      // Handle success/error
-    }, 2000);
+
+  
+    try {
+      const formData = new FormData();
+
+      // // Add all resized images to formData
+      //  uploadData.forEach((fileInfo) => {
+      //    formData.append("product_images[]", fileInfo as any);
+      //  });
+
+         uploadData.forEach((fileInfo) => {
+           if (fileInfo instanceof File) {
+             formData.append("product_images[]", fileInfo);
+           }
+         });
+
+      // Append all other form data
+      formData.append("product_name", data?.title);
+      formData.append("product_description", data?.description);
+      formData.append("category_id", selectedMainCategory?.value as any);
+      formData.append("sub_category_id", selectedSubCategory?.value as any);
+      formData.append("amount", data?.amount);
+      formData.append("is_delivery_available", deliveryAvailable);
+      formData.append("latitude", String(location?.latitude || ""));
+      formData.append("longitude", String(location?.longitude || ""));
+      formData.append("location", location?.address || "");
+
+      // Submit the form
+      console.log("formData entries:", formData);
+      createListingMutation.mutate(formData);
+    } catch (error) {
+      console.error("Error submitting form:", error);
+      // Handle error appropriately
+    }
   };
+
+  console.log("createListingMutation4000:", createListingMutation);
 
   return (
     <div className="flex-1 p-3 sm:p-6 overflow-y-auto h-[calc(100vh-56px)]">
@@ -139,7 +162,7 @@ const CreateProduct = () => {
           </div>
 
           <LoadingOverlay
-            isOpen={isLoading}
+            isOpen={createListingMutation.isPending}
             message="Uploading product..."
             animationType="pulse"
           />
@@ -166,8 +189,31 @@ const CreateProduct = () => {
                 </div>
               </div> */}
 
-              <ImageUploadComponent />
+              <ImageUploadComponent
+                uploadData={uploadData}
+                setUploadData={setUploadData}
+              />
             </div>
+
+            {/* Price Field */}
+            <Controller
+              control={control}
+              name="title"
+              rules={{
+                required: "Title is required",
+              }}
+              render={({ field: { onChange, onBlur, value } }) => (
+                <CustomInput
+                  label="Product name"
+                  primary
+                  placeholder="Enter product name"
+                  onChangeText={onChange}
+                  onBlur={onBlur}
+                  value={value}
+                  error={errors.title?.message}
+                />
+              )}
+            />
 
             {/* Description Field */}
             <Controller
@@ -236,8 +282,8 @@ const CreateProduct = () => {
                   <input
                     type="radio"
                     name="delivery"
-                    value="yes"
-                    checked={deliveryAvailable === "yes"}
+                    value="1"
+                    checked={deliveryAvailable === "1"}
                     onChange={(e) => setDeliveryAvailable(e.target.value)}
                     className="h-4 w-4 text-green-600 focus:ring-green-500"
                   />
@@ -247,8 +293,8 @@ const CreateProduct = () => {
                   <input
                     type="radio"
                     name="delivery"
-                    value="no"
-                    checked={deliveryAvailable === "no"}
+                    value="0"
+                    checked={deliveryAvailable === "0"}
                     onChange={(e) => setDeliveryAvailable(e.target.value)}
                     className="h-4 w-4 text-green-600 focus:ring-green-500"
                   />
@@ -260,7 +306,7 @@ const CreateProduct = () => {
             {/* Price Field */}
             <Controller
               control={control}
-              name="price"
+              name="amount"
               rules={{
                 required: "Price is required",
                 pattern: {
@@ -277,7 +323,7 @@ const CreateProduct = () => {
                   onChangeText={onChange}
                   onBlur={onBlur}
                   value={value}
-                  error={errors.price?.message}
+                  error={errors.amount?.message}
                 />
               )}
             />
@@ -288,9 +334,12 @@ const CreateProduct = () => {
                 title="Upload"
                 primary
                 disabled={
-                  !isValid || !selectedMainCategory || !selectedSubCategory
+                  !isValid ||
+                  !selectedMainCategory ||
+                  !selectedSubCategory ||
+                  createListingMutation.isPending
                 }
-                loading={isLoading}
+                loading={createListingMutation.isPending}
                 onPress={handleSubmit(onSubmit)}
                 icon={<Upload className="h-4 w-4" />}
                 iconPostion="left"

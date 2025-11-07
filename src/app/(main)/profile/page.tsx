@@ -1,4 +1,5 @@
-import { Header } from '@/_components/dashboardComp/Header'
+ "use client";
+ import { Header } from '@/_components/dashboardComp/Header'
 import { LeftSidebar } from '@/_components/dashboardComp/LeftSidebar'
 import { RightSidebar } from '@/_components/dashboardComp/RightSidebar'
 import { ProfileCenter } from '@/_components/profileComp/ProfileCenter'

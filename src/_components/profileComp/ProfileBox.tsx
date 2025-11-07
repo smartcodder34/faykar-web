@@ -1,12 +1,4 @@
-// import React from 'react'
 
-// export default function ProfileBox() {
-//   return (
-//     <div className="rounded-2xl bg-white border border-gray-200/70 shadow-sm">
-//       ProfileBox
-//     </div>
-//   );
-// }
 "use client"
 
 import React from "react";
@@ -14,6 +6,7 @@ import { Settings } from "lucide-react";
 import profile from "@/assets/images/profile.jpg"
 import Image from "next/image";
 import { useGetUserApi } from "@/lib/hooks/useGetUserApi";
+import { getInitials } from "@/utils/getInitials";
 
 export default function ProfileBox() {
     const getUserData = useGetUserApi();
@@ -22,14 +15,15 @@ export default function ProfileBox() {
     <div className="flex items-center gap-4 rounded-2xl bg-white border border-gray-200/70 shadow-sm p-4 w-full ">
       {/* Profile Image */}
 
-      <div className=" w-[150px] h-[150px]">
-        <Image
+      <div className=" w-[150px] h-[150px] items-center justify-center flex text-3xl font-semibold bg-gray-200 text-gray-600 rounded-full overflow-hidden">
+        {/* <Image
           src={profile}
           alt="image"
           width={100}
           height={100}
           className="object-cover h-full w-full rounded-full "
-        />
+        /> */}
+        {getInitials(getUserData?.data?.data?.full_name)}
       </div>
 
       {/* Profile Info */}
@@ -54,13 +48,13 @@ export default function ProfileBox() {
         {/* Stats */}
         <div className="flex gap-6 mt-2 text-sm text-gray-600">
           <span>
-            <strong className="text-gray-900">100</strong> posts
+            <strong className="text-gray-900">0</strong> posts
           </span>
           <span>
-            <strong className="text-gray-900">4M</strong> followers
+            <strong className="text-gray-900">0</strong> followers
           </span>
           <span>
-            <strong className="text-gray-900">454</strong> following
+            <strong className="text-gray-900">0</strong> following
           </span>
         </div>
       </div>

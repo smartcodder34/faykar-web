@@ -1,21 +1,19 @@
 import React, { useState } from "react";
 import { Plus, X } from "lucide-react";
 
-const ImageUploadComponent = () => {
+const ImageUploadComponent = ({ uploadData, setUploadData }:any) => {
   // Store file objects instead of base64
-  const [uploadData, setUploadData] = useState([null, null, null]); // 3 slots for files
   const [previewUrls, setPreviewUrls] = useState(["", "", ""]); // For display
 
   console.log("Upload Data:", uploadData);
   console.log("Upload previewUrls:", previewUrls);
 
-
-  const handleImagePick = (index) => {
+  const handleImagePick = (index: number) => {
     const input = document.createElement("input");
     input.type = "file";
     input.accept = "image/*";
     input.onchange = (e) => {
-      const file = e.target.files[0];
+      const file = e.target?.files[0];
       if (file) {
         const newUploadData = [...uploadData];
         const newPreviewUrls = [...previewUrls];
@@ -35,7 +33,7 @@ const ImageUploadComponent = () => {
     input.click();
   };
 
-  const handleRemoveImage = (index) => {
+  const handleRemoveImage = (index: number) => {
     const newUploadData = [...uploadData];
     const newPreviewUrls = [...previewUrls];
 
