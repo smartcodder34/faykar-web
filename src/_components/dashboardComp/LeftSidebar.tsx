@@ -93,20 +93,19 @@ export const LeftSidebar: React.FC = () => {
           </div> */}
 
           <div className=" w-[100px] h-[100px] items-center justify-center flex text-3xl font-semibold bg-gray-200 text-gray-600 rounded-full overflow-hidden">
-                  {/* <Image
+            {/* <Image
                     src={profile}
                     alt="image"
                     width={100}
                     height={100}
                     className="object-cover h-full w-full rounded-full "
                   /> */}
-                  {getInitials(getUserData?.data?.data?.full_name)}
-                </div>
+            {getInitials(getUserData?.data?.data?.full_name)}
+          </div>
           <span className="text-lg font-semibold tracking-wide text-[#2E6939]">
             {getUserData?.data?.data?.full_name || "Virat Kohli"}
           </span>
         </div>
-
         {/* Search Section */}
         <div className="mb-6">
           <div
@@ -123,40 +122,52 @@ export const LeftSidebar: React.FC = () => {
             <SettingsSlidersIcon className="text-gray-400" />
           </div>
         </div>
-
         {/* Navigation Items */}
+        
         <nav className="mb-8 space-y-1">
-          {navItems.map((item, index) => (
-            <button
-              key={item.label}
-              className={`w-full flex items-center justify-between rounded-lg px-3 py-3 text-sm transition-colors ${
-                index === 0
-                  ? "bg-green-100 text-green-700 border-l-4 border-green-600"
-                  : "hover:bg-gray-100/70"
-              }`}
-              onClick={() => {
-                handlePageRouting(item.label);
-              }}
-            >
-              <span className="flex items-center gap-3">
-                <span
-                  className={index === 0 ? "text-green-700" : "text-gray-600"}
-                >
-                  {item.icon}
-                </span>
-                <span
-                  className={index === 0 ? "text-green-700 font-medium" : ""}
-                >
-                  {item.label}
-                </span>
-              </span>
-              {item.count ? (
-                <span className="text-xs text-gray-500">{item.count}</span>
-              ) : null}
-            </button>
-          ))}
-        </nav>
+          {navItems.map((item, index) => {
+            const isDisabled = [
+              "Notifications",
+              "Friends",
+              "Languages",
+            ].includes(item.label);
 
+            return (
+              <button
+                key={item.label}
+                disabled={isDisabled}
+                className={`w-full flex items-center justify-between rounded-lg px-3 py-3 text-sm transition-colors ${
+                  index === 0
+                    ? "bg-green-100 text-green-700 border-l-4 border-green-600"
+                    : isDisabled
+                    ? "opacity-50 cursor-not-allowed"
+                    : "hover:bg-gray-100/70"
+                }`}
+                onClick={() => {
+                  if (!isDisabled) {
+                    handlePageRouting(item.label);
+                  }
+                }}
+              >
+                <span className="flex items-center gap-3">
+                  <span
+                    className={index === 0 ? "text-green-700" : "text-gray-600"}
+                  >
+                    {item.icon}
+                  </span>
+                  <span
+                    className={index === 0 ? "text-green-700 font-medium" : ""}
+                  >
+                    {item.label}
+                  </span>
+                </span>
+                {item.count ? (
+                  <span className="text-xs text-gray-500">{item.count}</span>
+                ) : null}
+              </button>
+            );
+          })}
+        </nav>
         {/* About Section */}
         <div className="space-y-2">
           <div className="text-xs font-semibold uppercase tracking-wide text-gray-500 mb-2">
